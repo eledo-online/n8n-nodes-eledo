@@ -1,5 +1,5 @@
-# n8n-node-eledo
-[![License: Apache 2.0](https://img.shields.io/badge/license-Apache--2.0-green.svg)](https://github.com/TcMenu/tcMenu/blob/main/LICENSE)
+# n8n-nodes-eledo
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Eledo](https://img.shields.io/badge/Eledo-green.svg)](https://eledo.online/)
 
 Community n8n node for integrating **Eledo** workflows and PDF automation.
