@@ -2,7 +2,7 @@
 ![n8n](https://img.shields.io/badge/n8n-%3E%3D2.0-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Eledo](https://img.shields.io/badge/Eledo-green.svg)](https://eledo.online/)
-![Eledo PDF automation overview](https://github.com/user-attachments/assets/4327fbc2-78df-4ec7-b0ff-494b6128d1e7)
+![Eledo PDF automation overview](https://github.com/user-attachments/assets/31ee16e8-7a60-4989-8a73-cf2c3097cfa4)
 
 This is an official n8n community node for integrating [**Eledo**](https://eledo.online/) into n8n workflows.
 
