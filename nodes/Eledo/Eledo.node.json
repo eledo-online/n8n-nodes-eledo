@@ -1,0 +1,18 @@
+{
+	"node": "@eledo/n8n-nodes-eledo",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Productivity", "Documents"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/eledo-online/n8n-nodes-eledo/blob/main/README.md#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/eledo-online/n8n-nodes-eledo#readme"
+			}
+		]
+	}
+}
