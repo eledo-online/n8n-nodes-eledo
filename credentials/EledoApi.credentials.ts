@@ -1,5 +1,6 @@
 import type {
 	IAuthenticateGeneric,
+	Icon,
 	ICredentialTestRequest,
 	ICredentialType,
 	INodeProperties,
@@ -9,6 +10,8 @@ export class EledoApi implements ICredentialType {
 	name = 'eledoApi';
 
 	displayName = 'Eledo API';
+
+	icon: Icon = { light: 'file:../icons/eledo.svg', dark: 'file:../icons/eledo.dark.svg' };
 
 	documentationUrl = 'https://github.com/eledo-online/n8n-nodes-eledo/blob/main/README.md#credentials';
 

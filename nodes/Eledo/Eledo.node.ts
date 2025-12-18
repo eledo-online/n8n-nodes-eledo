@@ -6,7 +6,7 @@ export class Eledo implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Eledo',
 		name: 'eledo',
-		icon: { light: 'file:eledo.svg', dark: 'file:eledo.svg' },
+		icon: { light: 'file:../../icons/eledo.svg', dark: 'file:../../icons/eledo.dark.svg' },
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
