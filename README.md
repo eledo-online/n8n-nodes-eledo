@@ -1,5 +1,7 @@
 # @eledo/n8n-nodes-eledo
 [![n8n](https://img.shields.io/badge/n8n-%3E%3D2.0-blue)](https://github.com/n8n-io/n8n)
+[![CI](https://github.com/eledo-online/n8n-nodes-eledo/actions/workflows/ci.yml/badge.svg)](https://github.com/eledo-online/n8n-nodes-eledo/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/eledo-online/n8n-nodes-eledo)](https://github.com/eledo-online/n8n-nodes-eledo/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Eledo](https://img.shields.io/badge/Eledo-green.svg)](https://eledo.online/)
 ![Eledo PDF automation overview](https://github.com/user-attachments/assets/31ee16e8-7a60-4989-8a73-cf2c3097cfa4)
