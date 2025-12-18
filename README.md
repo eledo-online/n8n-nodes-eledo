@@ -1,12 +1,12 @@
 # @eledo/n8n-nodes-eledo
-![n8n](https://img.shields.io/badge/n8n-%3E%3D2.0-blue)
+[![n8n](https://img.shields.io/badge/n8n-%3E%3D2.0-blue)](https://github.com/n8n-io/n8n)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Eledo](https://img.shields.io/badge/Eledo-green.svg)](https://eledo.online/)
 ![Eledo PDF automation overview](https://github.com/user-attachments/assets/31ee16e8-7a60-4989-8a73-cf2c3097cfa4)
 
 This is an official n8n community node for integrating [**Eledo**](https://eledo.online/) into n8n workflows.
 
-**Eledo** is a document automation platform focused on generating and processing PDFs through configurable workflows and API-driven execution.
+**Eledo** is a document automation service that allows you to generate PDFs from structured data directly within n8n workflows.
 
 [n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/sustainable-use-license/) workflow automation platform.
 
