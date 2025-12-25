@@ -1,6 +1,5 @@
 import { NodeConnectionTypes, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
-import { userDescription } from './resources/user';
-import { companyDescription } from './resources/company';
+import { documentDescription } from './resources/document';
 
 export class Eledo implements INodeType {
 	description: INodeTypeDescription = {
@@ -9,7 +8,7 @@ export class Eledo implements INodeType {
 		icon: { light: 'file:../../icons/eledo.svg', dark: 'file:../../icons/eledo.dark.svg' },
 		group: ['transform'],
 		version: 1,
-		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
+        subtitle: '={{$parameter["resource"] + ": " + $parameter["operation"]}}',
 		description: 'Generate PDFs with Eledo directly in n8n workflows',
 		defaults: {
 			name: 'Eledo',
@@ -33,18 +32,13 @@ export class Eledo implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
-						name: 'User',
-						value: 'user',
-					},
-					{
-						name: 'Company',
-						value: 'company',
-					},
+						name: 'Document',
+						value: 'document',
+					}
 				],
-				default: 'user',
+				default: 'document',
 			},
-			...userDescription,
-			...companyDescription,
+			...documentDescription,
 		],
 	};
 }
