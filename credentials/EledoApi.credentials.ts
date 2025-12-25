@@ -23,6 +23,7 @@ export class EledoApi implements ICredentialType {
 			typeOptions: { password: true },
 			required: true,
 			default: '',
+			description: 'Create or copy your API key in Eledo → API Details: https://eledo.online/api',
 		},
 	];
 
@@ -30,7 +31,7 @@ export class EledoApi implements ICredentialType {
 		type: 'generic',
 		properties: {
 			headers: {
-				'x-api-key': '={{$credentials.apiKey}}',
+				'Api-Key': '={{$credentials.apiKey}}',
 			},
 		},
 	};
@@ -38,7 +39,7 @@ export class EledoApi implements ICredentialType {
 	test: ICredentialTestRequest = {
 		request: {
 			baseURL: 'https://eledo.online/api/RESTv1',
-			url: '/v1/user',
+			url: '/Profile',
 		},
 	};
 }
