@@ -1,0 +1,22 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "Name": {
+        "type": "String"
+      },
+      "Surname": {
+        "type": "String"
+      },
+      "Hobbies": {
+        "title": "Hobbies",
+        "type": "array",
+        "items": {
+          "Hobby": {
+            "type": "String"
+          }
+        }
+      }
+    }
+  }
+}
