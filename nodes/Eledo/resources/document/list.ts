@@ -27,13 +27,21 @@ function isEledoListResponse(value: unknown): value is EledoListResponse {
 }
 
 export async function getTemplates(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+	const raw = this.getCurrentNodeParameter('templateScope');
+	const scopeUi = raw === 'public' ? 'public' : 'private';
+	const scope = scopeUi === 'private' ? 'Mine' : 'Public';
+
 	let response: unknown;
 
 	try {
 		response = await this.helpers.httpRequestWithAuthentication.call(this, 'eledoApi', {
 			method: 'GET',
 			url: eledoUrl('/List'),
-			qs: { scope: 'Mine', limit: 200, page: 1 },
+			qs: {
+				scope,
+				limit: 200,
+				page: 1,
+			},
 			json: true,
 		});
 	} catch (err: unknown) {

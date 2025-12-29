@@ -7,6 +7,22 @@ const showOnlyForDocumentGenerate = {
 
 export const documentGenerateDescription: INodeProperties[] = [
 	{
+		displayName: 'Template Scope',
+		name: 'templateScope',
+		type: 'options',
+		noDataExpression: true,
+		required: true,
+		default: 'private',
+		displayOptions: {
+			show: showOnlyForDocumentGenerate,
+		},
+		options: [
+			{ name: 'Private', value: 'private' },
+			{ name: 'Public', value: 'public' },
+		],
+		description: 'Whether to load templates from your private library or from the public gallery',
+	},
+	{
 		displayName: 'Template Name or ID',
 		name: 'templateId',
 		type: 'options',
@@ -14,8 +30,9 @@ export const documentGenerateDescription: INodeProperties[] = [
 		default: '',
 		typeOptions: {
 			loadOptionsMethod: 'getTemplates',
+			loadOptionsDependsOn: ['templateScope']
 		},
-		description: 'Select the document template to use. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+		description: 'Select the document template to use. Templates are loaded from the selected scope. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 		displayOptions: {
 			show: showOnlyForDocumentGenerate,
 		},
