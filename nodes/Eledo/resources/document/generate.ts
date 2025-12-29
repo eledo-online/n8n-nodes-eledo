@@ -7,15 +7,18 @@ const showOnlyForDocumentGenerate = {
 
 export const documentGenerateDescription: INodeProperties[] = [
 	{
-		displayName: 'Template ID',
+		displayName: 'Template Name or ID',
 		name: 'templateId',
-		type: 'string',
-		default: '',
+		type: 'options',
 		required: true,
+		default: '',
+		typeOptions: {
+			loadOptionsMethod: 'getTemplates',
+		},
+		description: 'Select the document template to use. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 		displayOptions: {
 			show: showOnlyForDocumentGenerate,
 		},
-		description: 'Unique identifier of the template',
 		routing: {
 			send: {
 				type: 'body',

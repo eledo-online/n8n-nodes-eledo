@@ -1,11 +1,12 @@
 import { NodeConnectionTypes, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
 import { documentDescription } from './resources/document';
+import { getTemplates } from './resources/document/list';
 
 export class Eledo implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Eledo',
 		name: 'eledo',
-		icon: { light: 'file:../../icons/eledo.svg', dark: 'file:../../icons/eledo.dark.svg' },
+		icon: { light: 'file:../../shared/eledo/icons/eledo.svg', dark: 'file:../../shared/eledo/icons/eledo.dark.svg' },
 		group: ['transform'],
 		version: 1,
         subtitle: '={{$parameter["resource"] + ": " + $parameter["operation"]}}',
@@ -18,7 +19,6 @@ export class Eledo implements INodeType {
 		outputs: [NodeConnectionTypes.Main],
 		credentials: [{ name: 'eledoApi', required: true }],
 		requestDefaults: {
-			baseURL: 'https://eledo.online/api/RESTv1',
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
@@ -40,5 +40,11 @@ export class Eledo implements INodeType {
 			},
 			...documentDescription,
 		],
+	};
+
+	methods = {
+		loadOptions: {
+			getTemplates,
+		},
 	};
 }

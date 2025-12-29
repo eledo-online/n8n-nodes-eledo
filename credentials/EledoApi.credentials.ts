@@ -6,12 +6,14 @@ import type {
 	INodeProperties,
 } from 'n8n-workflow';
 
+import { eledoUrl } from '../shared/eledo/constants/url';
+
 export class EledoApi implements ICredentialType {
 	name = 'eledoApi';
 
 	displayName = 'Eledo API';
 
-	icon: Icon = { light: 'file:../icons/eledo.svg', dark: 'file:../icons/eledo.dark.svg' };
+	icon: Icon = { light: 'file:../shared/eledo/icons/eledo.svg', dark: 'file:../shared/eledo/icons/eledo.dark.svg' };
 
 	documentationUrl = 'https://github.com/eledo-online/n8n-nodes-eledo/blob/main/README.md#credentials';
 
@@ -38,8 +40,7 @@ export class EledoApi implements ICredentialType {
 
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'https://eledo.online/api/RESTv1',
-			url: '/Profile',
+			url: eledoUrl('/Profile'),
 		},
 	};
 }
