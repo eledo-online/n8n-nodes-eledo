@@ -74,19 +74,46 @@ export const documentGenerateDescription: INodeProperties[] = [
 		},
 	},
 	{
-		displayName: 'Payload (JSON)',
-		name: 'file',
-		type: 'json',
-		default: '{}',
-		displayOptions: {
-			show: showOnlyForDocumentGenerate,
+		displayName: 'Fields',
+		name: 'fields',
+		type: 'fixedCollection',
+		default: {},
+		typeOptions: {
+			multipleValues: true,
 		},
-		description: 'JSON payload matching the template schema used to generate the PDF',
-		routing: {
-			send: {
-				type: 'body',
-				property: 'file',
+		displayOptions: {
+				show: showOnlyForDocumentGenerate,
+				hide: {
+				templateId: [''], // hide until template selected
 			},
 		},
+		description: 'Add template fields and map values (you can use expressions)',
+		options: [
+			{
+				name: 'field',
+				displayName: 'Field',
+				values: [
+					{
+						displayName: 'Field Name or ID',
+						name: 'name',
+						type: 'options',
+						required: true,
+						default: '',
+						typeOptions: {
+							loadOptionsMethod: 'getTemplateFields',
+							loadOptionsDependsOn: ['templateId', 'useTemplateVersion', 'templateVersion'],
+						},
+						description:
+							'Select a field from the template schema. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+					},
+					{
+						displayName: 'Value',
+						name: 'value',
+						type: 'string',
+						default: '',
+					},
+				],
+			},
+		],
 	},
 ];

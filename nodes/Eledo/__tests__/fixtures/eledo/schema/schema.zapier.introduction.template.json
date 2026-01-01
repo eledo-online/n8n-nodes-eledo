@@ -1,0 +1,21 @@
+{
+  "schema": [
+    {
+      "key": "Name",
+      "type": "string"
+    },
+    {
+      "key": "Surname",
+      "type": "string"
+    },
+    {
+      "key": "Hobbies",
+      "children": [
+        {
+          "key": "Hobby",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

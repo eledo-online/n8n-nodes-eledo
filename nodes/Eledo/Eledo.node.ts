@@ -1,6 +1,7 @@
 import { NodeConnectionTypes, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
 import { documentDescription } from './resources/document';
 import { getTemplates } from './resources/document/list';
+import { getTemplateFields } from './resources/document/schema';
 
 export class Eledo implements INodeType {
 	description: INodeTypeDescription = {
@@ -45,6 +46,7 @@ export class Eledo implements INodeType {
 	methods = {
 		loadOptions: {
 			getTemplates,
+			getTemplateFields,
 		},
 	};
 }

@@ -32,7 +32,8 @@ Optional query parameters:
 
 ### Schema Type Handling
 
-- **Default schema type** (when not specified) is `zapier`.
+- **Default schema type** (when not specified) is `eledo`.
+- **Alternative documented schemas** (when specified with schemaType): `zapier`.
 - **Invalid `schemaType` values** do **not** trigger an error.
   - Instead, Eledo silently falls back to the `zapier` schema.
 - Any **other schema types**, if they exist, are **undocumented**.

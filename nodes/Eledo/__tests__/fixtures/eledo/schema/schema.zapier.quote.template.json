@@ -1,0 +1,74 @@
+{
+  "schema": [
+    {
+      "key": "Notes",
+      "type": "string"
+    },
+    {
+      "key": "QuoteNo",
+      "type": "string"
+    },
+    {
+      "key": "CreatedOn",
+      "type": "string"
+    },
+    {
+      "key": "Client",
+      "children": [
+        {
+          "key": "Name",
+          "type": "string"
+        },
+        {
+          "key": "AddressLine1",
+          "type": "string"
+        },
+        {
+          "key": "AddressLine2",
+          "type": "string"
+        },
+        {
+          "key": "Phone",
+          "type": "string"
+        },
+        {
+          "key": "Email",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "key": "ClientID",
+      "type": "string"
+    },
+    {
+      "key": "ExpirationDate",
+      "type": "string"
+    },
+    {
+      "key": "PaymentTerms",
+      "type": "string"
+    },
+    {
+      "key": "items",
+      "children": [
+        {
+          "key": "Name",
+          "type": "string"
+        },
+        {
+          "key": "Price",
+          "type": "number"
+        },
+        {
+          "key": "Quantity",
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "key": "DiscountPercent",
+      "type": "number"
+    }
+  ]
+}
