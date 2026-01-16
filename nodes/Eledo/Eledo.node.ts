@@ -5,7 +5,7 @@ import { getTemplateFields } from './resources/document/schema';
 
 export class Eledo implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Eledo',
+		displayName: 'Eledo PDF',
 		name: 'eledo',
 		icon: { light: 'file:../../shared/eledo/icons/eledo.svg', dark: 'file:../../shared/eledo/icons/eledo.dark.svg' },
 		group: ['transform'],

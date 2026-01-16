@@ -44,7 +44,7 @@ export const documentGenerateDescription: INodeProperties[] = [
 		},
 	},
 	{
-		displayName: 'Use Specific Version',
+		displayName: 'Use Specific Template Version',
 		name: 'useTemplateVersion',
 		type: 'boolean',
 		default: false,
