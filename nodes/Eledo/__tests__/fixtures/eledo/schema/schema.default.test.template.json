@@ -1,0 +1,67 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "text": {
+        "type": "String"
+      },
+      "number": {
+        "type": "Number"
+      },
+      "date": {
+        "type": "Date"
+      },
+      "boolean": {
+        "type": "Boolean"
+      },
+      "person": {
+        "title": "person",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "String"
+          },
+          "surname": {
+            "type": "String"
+          }
+        }
+      },
+      "line_items": {
+        "title": "line_items",
+        "type": "array",
+        "items": {
+          "name": {
+            "type": "String"
+          },
+          "surname": {
+            "type": "String"
+          },
+          "price": {
+            "type": "String"
+          }
+        }
+      },
+      "tables": {
+        "title": "tables",
+        "type": "array",
+        "items": {
+          "line_items": {
+            "title": "line_items",
+            "type": "array",
+            "items": {
+              "name": {
+                "type": "String"
+              },
+              "surname": {
+                "type": "String"
+              },
+              "price": {
+                "type": "String"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
