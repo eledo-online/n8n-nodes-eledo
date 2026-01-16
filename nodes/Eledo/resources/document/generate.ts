@@ -74,7 +74,35 @@ export const documentGenerateDescription: INodeProperties[] = [
 		},
 	},
 	{
-		displayName: 'Fields',
+		displayName: 'Input',
+		name: 'inputMode',
+		type: 'options',
+		noDataExpression: true,
+		required: true,
+		default: 'fields',
+		displayOptions: {
+				show: showOnlyForDocumentGenerate,
+				hide: {
+				templateId: [''], // hide until template selected
+			},
+		},
+		options: [
+			{
+				name: 'Guided Fields',
+				value: 'fields',
+				description: 'Fill template fields using a guided form generated from the selected template',
+			},
+			{
+				name: 'JSON',
+				value: 'json',
+				description: 'Provide the raw JSON payload manually (advanced users)',
+			},
+		],
+		description:
+			'Choose how to provide input data for the selected template. Guided Fields are recommended for most use cases.',
+	},
+	{
+		displayName: 'Guided Fields',
 		name: 'fields',
 		type: 'fixedCollection',
 		default: {},
@@ -82,7 +110,10 @@ export const documentGenerateDescription: INodeProperties[] = [
 			multipleValues: true,
 		},
 		displayOptions: {
-				show: showOnlyForDocumentGenerate,
+				show: {
+					...showOnlyForDocumentGenerate,
+					inputMode: ['fields'],
+				},
 				hide: {
 				templateId: [''], // hide until template selected
 			},
@@ -115,5 +146,49 @@ export const documentGenerateDescription: INodeProperties[] = [
 				],
 			},
 		],
+	},
+	{
+		displayName: 'Payload (JSON)',
+		name: 'payloadJson',
+		type: 'json',
+		default: '',
+		displayOptions: {
+				show: {
+					...showOnlyForDocumentGenerate,
+					inputMode: ['json'],
+				},
+				hide: {
+				templateId: [''], // hide until template selected
+			},
+		},
+		description:
+			'Paste the JSON payload for the selected template. You can copy the exact payload structure from the template’s API page in Eledo.',
+	},
+	{
+		displayName: 'Output',
+		name: 'outputType',
+		type: 'options',
+		noDataExpression: true,
+		required: true,
+		default: 'file',
+		displayOptions: {
+				show: showOnlyForDocumentGenerate,
+				hide: {
+				templateId: [''], // hide until template selected
+			},
+		},
+		options: [
+			{
+				name: 'File',
+				value: 'file',
+				description: 'Return the generated PDF as a binary file for use in subsequent workflow steps',
+			},
+			{
+				name: 'Base64',
+				value: 'base64',
+				description: 'Return the generated PDF encoded as a Base64 string',
+			},
+		],
+		description: 'Choose how the generated PDF should be returned',
 	},
 ];
