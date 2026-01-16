@@ -33,13 +33,12 @@ Optional query parameters:
 ### Schema Type Handling
 
 - **Default schema type** (when not specified) is `eledo`.
-- **Alternative documented schemas** (when specified with schemaType): `zapier`.
+- **Alternative documented schemas** (when specified with schemaType): `zapier` and `integromat` (Make).
 - **Invalid `schemaType` values** do **not** trigger an error.
-  - Instead, Eledo silently falls back to the `zapier` schema.
-- Any **other schema types**, if they exist, are **undocumented**.
+  - Instead, Eledo silently falls back to the `eledo` schema.
 
 **Integration decision:**
-- The n8n node will **always explicitly request** `schemaType=zapier` to avoid future breaking changes if defaults are altered server-side.
+- The n8n node will **always ask for the default schema**.
 
 ---
 
