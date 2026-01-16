@@ -25,19 +25,23 @@ function isEledoSchemaResponse(value: unknown): value is EledoSchemaResponse {
 	return 'schema' in value;
 }
 
-function pickPrimitiveFields(schema: EledoSchemaResponse): Array<{ key: string; type: string }> {
+type PrimitiveType = 'String' | 'Number' | 'Boolean' | 'Date';
+
+function pickPrimitiveFields(
+	schema: EledoSchemaResponse,
+	allowed: ReadonlySet<PrimitiveType>,
+): Array<{ key: string; type: PrimitiveType }> {
 	const props = schema.schema?.properties;
 	if (!props || typeof props !== 'object') return [];
 
-	const out: Array<{ key: string; type: string }> = [];
+	const out: Array<{ key: string; type: PrimitiveType }> = [];
 
 	for (const [key, def] of Object.entries(props)) {
-		// Expecting `{ type: "String" }` / `{ type: "Number" }`
 		if (!def || typeof def !== 'object') continue;
 
 		const t = (def as Record<string, unknown>).type;
-		if (t === 'String' || t === 'Number') {
-			out.push({ key, type: t });
+		if (typeof t === 'string' && allowed.has(t as PrimitiveType)) {
+			out.push({ key, type: t as PrimitiveType });
 		}
 	}
 
@@ -74,11 +78,11 @@ async function fetchTemplateSchema(
 	return response as EledoSchemaResponse;
 }
 
-export async function getTemplateFields(
+async function loadTemplateSchema(
 	this: ILoadOptionsFunctions,
-): Promise<INodePropertyOptions[]> {
+): Promise<EledoSchemaResponse | null> {
 	const templateId = this.getCurrentNodeParameter('templateId') as string;
-	if (!templateId) return []; // collection is hidden anyway, but safe
+	if (!templateId) return null;
 
 	const useTemplateVersion = this.getCurrentNodeParameter('useTemplateVersion') as boolean;
 	const templateVersionRaw = this.getCurrentNodeParameter('templateVersion');
@@ -86,15 +90,56 @@ export async function getTemplateFields(
 	const templateVersion =
 		useTemplateVersion && typeof templateVersionRaw === 'number' ? templateVersionRaw : undefined;
 
-	const schema = await fetchTemplateSchema.call(this, templateId, templateVersion);
-	const fields = pickPrimitiveFields(schema);
+	return await fetchTemplateSchema.call(this, templateId, templateVersion);
+}
 
-	// Stable output
+export async function getTemplateTextAndNumberFields(
+	this: ILoadOptionsFunctions,
+): Promise<INodePropertyOptions[]> {
+	const schema = await loadTemplateSchema.call(this);
+	if (!schema) return [];
+
+	const fields = pickPrimitiveFields(schema, new Set(['String', 'Number']));
+
 	fields.sort((a, b) => a.key.localeCompare(b.key));
 
 	return fields.map((f) => ({
 		name: f.key,
 		value: f.key,
 		description: f.type === 'Number' ? 'Number' : 'Text',
+	}));
+}
+
+export async function getTemplateBooleanFields(
+	this: ILoadOptionsFunctions,
+): Promise<INodePropertyOptions[]> {
+	const schema = await loadTemplateSchema.call(this);
+	if (!schema) return [];
+
+	const fields = pickPrimitiveFields(schema, new Set(['Boolean']));
+
+	fields.sort((a, b) => a.key.localeCompare(b.key));
+
+	return fields.map((f) => ({
+		name: f.key,
+		value: f.key,
+		description: 'Boolean',
+	}));
+}
+
+export async function getTemplateDateFields(
+	this: ILoadOptionsFunctions,
+): Promise<INodePropertyOptions[]> {
+	const schema = await loadTemplateSchema.call(this);
+	if (!schema) return [];
+
+	const fields = pickPrimitiveFields(schema, new Set(['Date']));
+
+	fields.sort((a, b) => a.key.localeCompare(b.key));
+
+	return fields.map((f) => ({
+		name: f.key,
+		value: f.key,
+		description: 'Date',
 	}));
 }

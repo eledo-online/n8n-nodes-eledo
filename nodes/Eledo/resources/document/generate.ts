@@ -102,10 +102,11 @@ export const documentGenerateDescription: INodeProperties[] = [
 			'Choose how to provide input data for the selected template. Guided Fields are recommended for most use cases.',
 	},
 	{
-		displayName: 'Guided Fields',
-		name: 'fields',
+		displayName: 'Text / Number Fields',
+		name: 'textAndNumberFields',
 		type: 'fixedCollection',
 		default: {},
+		placeholder: 'Add Text or Number Field',
 		typeOptions: {
 			multipleValues: true,
 		},
@@ -131,7 +132,7 @@ export const documentGenerateDescription: INodeProperties[] = [
 						required: true,
 						default: '',
 						typeOptions: {
-							loadOptionsMethod: 'getTemplateFields',
+							loadOptionsMethod: 'getTemplateTextAndNumberFields',
 							loadOptionsDependsOn: ['templateId', 'useTemplateVersion', 'templateVersion'],
 						},
 						description:
@@ -141,6 +142,98 @@ export const documentGenerateDescription: INodeProperties[] = [
 						displayName: 'Value',
 						name: 'value',
 						type: 'string',
+						default: '',
+					},
+				],
+			},
+		],
+	},
+	{
+		displayName: 'Boolean Fields',
+		name: 'booleanFields',
+		type: 'fixedCollection',
+		default: {},
+		placeholder: 'Add Boolean Field',
+		typeOptions: {
+			multipleValues: true,
+		},
+		displayOptions: {
+				show: {
+					...showOnlyForDocumentGenerate,
+					inputMode: ['fields'],
+				},
+				hide: {
+				templateId: [''], // hide until template selected
+			},
+		},
+		options: [
+			{
+				name: 'field',
+				displayName: 'Field',
+				values: [
+					{
+						displayName: 'Field Name or ID',
+						name: 'name',
+						type: 'options',
+						required: true,
+						default: '',
+						typeOptions: {
+							loadOptionsMethod: 'getTemplateBooleanFields',
+							loadOptionsDependsOn: ['templateId', 'useTemplateVersion', 'templateVersion'],
+						},
+						description:
+							'Select a Boolean field from the template schema. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+					},
+					{
+						displayName: 'Value',
+						name: 'value',
+						type: 'boolean',
+						default: false,
+					},
+				],
+			},
+		],
+	},
+	{
+		displayName: 'Date Fields',
+		name: 'dateFields',
+		type: 'fixedCollection',
+		default: {},
+		placeholder: 'Add Date Field',
+		typeOptions: {
+			multipleValues: true,
+		},
+		displayOptions: {
+				show: {
+					...showOnlyForDocumentGenerate,
+					inputMode: ['fields'],
+				},
+				hide: {
+				templateId: [''], // hide until template selected
+			},
+		},
+		options: [
+			{
+				name: 'field',
+				displayName: 'Field',
+				values: [
+					{
+						displayName: 'Field Name or ID',
+						name: 'name',
+						type: 'options',
+						required: true,
+						default: '',
+						typeOptions: {
+							loadOptionsMethod: 'getTemplateDateFields',
+							loadOptionsDependsOn: ['templateId', 'useTemplateVersion', 'templateVersion'],
+						},
+						description:
+							'Select a Date field from the template schema. Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
+					},
+					{
+						displayName: 'Value',
+						name: 'value',
+						type: 'dateTime',
 						default: '',
 					},
 				],
