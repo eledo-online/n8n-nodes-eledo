@@ -60,7 +60,6 @@ async function fetchTemplateSchema(
 		response = await this.helpers.httpRequestWithAuthentication.call(this, 'eledoApi', {
 			method: 'GET',
 			url: eledoSchemaUrl(templateId, templateVersion),
-			//qs: { schemaType: 'zapier' },
 			json: true,
 		});
 	} catch (err: unknown) {

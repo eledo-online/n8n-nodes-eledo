@@ -28,7 +28,7 @@ At this stage:
 - The node will construct the payload internally
 - Payload structure will be derived from:
   - Template selection
-  - Schema (`schemaType=zapier`)
+  - Default schema
   - Integration-defined transformation rules
 
 The goal is to **shield users from raw API mechanics** while preserving full flexibility.
