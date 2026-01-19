@@ -1,4 +1,4 @@
-import { NodeConnectionTypes, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
+import { NodeConnectionTypes, type INodeType, type INodeTypeDescription, IExecuteFunctions, INodeExecutionData } from 'n8n-workflow';
 import { documentDescription } from './resources/document';
 import { getTemplates } from './resources/document/list';
 import { getTemplateTextAndNumberFields, getTemplateBooleanFields, getTemplateDateFields } from './resources/document/schema';
@@ -51,4 +51,8 @@ export class Eledo implements INodeType {
 			getTemplateDateFields,
 		},
 	};
+
+	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
+		return [];
+	}
 }

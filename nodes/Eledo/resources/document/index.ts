@@ -1,6 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
 import { documentGenerateDescription } from './generate';
-import { eledoUrl } from '../../../../shared/eledo/constants/url';
 
 const showOnlyForDocuments = {
 	resource: ['document'],
@@ -21,12 +20,6 @@ export const documentDescription: INodeProperties[] = [
 				value: 'generate',
 				action: 'Generate PDF document',
 				description: 'Generate a PDF from a template',
-				routing: {
-					request: {
-						method: 'POST',
-						url: eledoUrl('/Generate'),
-					},
-				},
 			},
 		],
 		default: 'generate',
