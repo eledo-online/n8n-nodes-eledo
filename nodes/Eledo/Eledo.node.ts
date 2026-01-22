@@ -2,6 +2,7 @@ import { NodeConnectionTypes, type INodeType, type INodeTypeDescription, IExecut
 import { documentDescription } from './resources/document';
 import { getTemplates } from './resources/document/list';
 import { getTemplateTextAndNumberFields, getTemplateBooleanFields, getTemplateDateFields } from './resources/document/schema';
+import { executeDocumentGenerate } from './resources/document/generate-execute';
 
 export class Eledo implements INodeType {
 	description: INodeTypeDescription = {
@@ -53,6 +54,23 @@ export class Eledo implements INodeType {
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
-		return [];
+		const items = this.getInputData();
+		const returnItems = [];
+
+		for (let i = 0; i < items.length; i++) {
+			const resource = this.getNodeParameter('resource', i) as string;
+			const operation = this.getNodeParameter('operation', i) as string;
+
+			if (resource === 'document' && operation === 'generate') {
+				const out = await executeDocumentGenerate.call(this, i, items[i]);
+				returnItems.push(out);
+				continue;
+			}
+
+			// fallback passthrough
+			returnItems.push(items[i]);
+		}
+
+		return [returnItems];
 	}
 }
