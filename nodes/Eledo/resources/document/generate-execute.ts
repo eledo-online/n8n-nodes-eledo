@@ -1,4 +1,4 @@
-import { INodeExecutionData, type IExecuteFunctions } from 'n8n-workflow';
+import { IHttpRequestOptions, INodeExecutionData, JsonObject, type IExecuteFunctions } from 'n8n-workflow';
 import { NodeApiError } from 'n8n-workflow';
 import { eledoUrl } from '../../../../shared/eledo/constants/url';
 
@@ -87,7 +87,7 @@ function coerceNumberMaybe(v: unknown): number | undefined {
 }
 
 /**
- * Parses a JSON string into a plain object (Record<string, unknown>).
+ * Parses a JSON string into a plain object (JsonObject).
  *
  * Behavior:
  * - Accepts any value; only string inputs are considered for parsing.
@@ -105,7 +105,7 @@ function coerceNumberMaybe(v: unknown): number | undefined {
  * - This helper is used to ensure the "JSON" input mode produces a predictable structure.
  * - It does not validate schema keys — only shape (object vs array) and JSON correctness.
  */
-function safeJsonParseObject(this: IExecuteFunctions, raw: unknown): Record<string, unknown> {
+function safeJsonParseObject(this: IExecuteFunctions, raw: unknown): JsonObject {
 	const text = typeof raw === 'string' ? raw.trim() : '';
 
 	// Allow empty payload → treated as empty file object
@@ -132,13 +132,144 @@ function safeJsonParseObject(this: IExecuteFunctions, raw: unknown): Record<stri
 		});
 	}
 
-	return parsed as Record<string, unknown>;
+	return parsed as JsonObject;
+}
+
+function buildFileFromGuidedFields(this: IExecuteFunctions, itemIndex: number): JsonObject | undefined {
+	const file: JsonObject = {};
+
+	type FixedCollectionRows = {
+		field?: Array<{
+			name?: string;
+			value?: unknown;
+		}>;
+	};
+
+	const tn = this.getNodeParameter('textAndNumberFields', itemIndex, {}) as FixedCollectionRows;
+	const tnRows = tn.field ?? [];
+	for (const row of tnRows) {
+		const key = row.name;
+		if (!key) continue;
+		const v = row.value;
+
+		// best-effort: treat numeric-like as number; otherwise string
+		const n = coerceNumberMaybe(v);
+		file[key] = n ?? (v ?? '');
+	}
+
+	const bf = this.getNodeParameter('booleanFields', itemIndex, {}) as FixedCollectionRows;
+	const bfRows = bf?.field ?? [];
+	for (const row of bfRows) {
+		const key = row.name;
+		if (!key) continue;
+		file[key] = !!row.value;
+	}
+
+	const df = this.getNodeParameter('dateFields', itemIndex, {}) as FixedCollectionRows;
+	const dfRows = df?.field ?? [];
+	for (const row of dfRows) {
+		const key = row.name;
+		if (!key) continue;
+		const iso = toIsoDateTimeStringMaybe(row.value);
+		// if invalid / empty, we skip (Eledo accepts partial payloads)
+		if (!iso) continue;
+		file[key] = iso;
+	}
+
+	return Object.keys(file).length ? file : undefined;
+}
+
+function buildGenerateRequestBody(this: IExecuteFunctions, itemIndex: number): JsonObject {
+	const templateId = this.getNodeParameter('templateId', itemIndex) as string;
+	if (!templateId) {
+		throw new NodeApiError(this.getNode(), { message: 'Template is required.' });
+	}
+
+	const useTemplateVersion = this.getNodeParameter('useTemplateVersion', itemIndex) as boolean;
+	const templateVersionRaw = this.getNodeParameter('templateVersion', itemIndex, undefined);
+	const templateVersion =
+		useTemplateVersion && typeof templateVersionRaw === 'number' ? templateVersionRaw : undefined;
+
+	const inputMode = this.getNodeParameter('inputMode', itemIndex) as InputMode;
+
+	let fileObj: JsonObject | undefined;
+
+	if (inputMode === 'json') {
+		// JSON = content of file object
+		const raw = this.getNodeParameter('payloadJson', itemIndex) as string;
+		fileObj = safeJsonParseObject.call(this, raw);
+		if (Object.keys(fileObj).length === 0) fileObj = undefined; // optional file
+	} else {
+		fileObj = buildFileFromGuidedFields.call(this, itemIndex);
+	}
+
+	type GenerateRequestBody = {
+		templateId: string;
+		templateVersion?: number;
+		file?: JsonObject;
+	};
+
+	const body: GenerateRequestBody = { templateId };
+	if (templateVersion !== undefined) body.templateVersion = templateVersion;
+	if (fileObj !== undefined) body.file = fileObj;
+
+	return body;
+}
+
+async function callGenerate(this: IExecuteFunctions, body: JsonObject) {
+	const options: IHttpRequestOptions = {
+		method: 'POST',
+		url: eledoUrl('/Generate'),
+		body,
+		json: true,
+		returnFullResponse: true,
+		encoding: 'arraybuffer'
+	};
+
+	// uses your credential name: eledoApi
+	return (await this.helpers.httpRequestWithAuthentication.call(this, 'eledoApi', options)) as {
+		body: ArrayBuffer;
+		headers: JsonObject;
+		statusCode: number;
+	};
 }
 
 export async function executeDocumentGenerate(this: IExecuteFunctions, itemIndex: number, item: INodeExecutionData): Promise<INodeExecutionData> {
-    return {
-        json: {
-            ok: true
-        },
-    };
+	const outputType = this.getNodeParameter('outputType', itemIndex) as OutputType;
+
+	const body: JsonObject = buildGenerateRequestBody.call(this, itemIndex);
+	const resp = await callGenerate.call(this, body);
+
+	const contentType = String(resp.headers?.['content-type'] ?? '').toLowerCase();
+
+	// Eledo: error is JSON
+	if (contentType.includes('application/json')) {
+		const text = resp.body ? await this.helpers.binaryToString(resp.body as ArrayBuffer, 'utf8') : '';
+		let errJson: JsonObject | undefined;
+		try {
+			errJson = text ? (JSON.parse(text) as JsonObject) : undefined;
+		} catch {
+			errJson = undefined;
+		}
+		throw new NodeApiError(this.getNode(), errJson ?? { message: text || 'Eledo API error' });
+	}
+
+	const filename =
+		extractFilename(String(resp.headers?.['content-disposition'] ?? '')) ?? 'document.pdf';
+
+	const out: INodeExecutionData = {
+		json: { ...(item.json ?? {}) },
+		binary: item.binary ? { ...item.binary } : {},
+	};
+
+	if (outputType === 'base64') {
+		out.json.pdfBase64 = await this.helpers.binaryToString(resp.body as ArrayBuffer, 'base64');
+		out.json.filename = filename;
+		out.json.mimeType = 'application/pdf';
+		return out;
+	}
+
+	// outputType === 'file'
+	out.binary!.pdf = await this.helpers.prepareBinaryData(resp.body, filename, 'application/pdf');
+	return out;
 }

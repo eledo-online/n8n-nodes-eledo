@@ -1,11 +1,11 @@
-import type { ILoadOptionsFunctions, INodePropertyOptions } from 'n8n-workflow';
+import type { ILoadOptionsFunctions, INodePropertyOptions, JsonObject } from 'n8n-workflow';
 import { NodeOperationError } from 'n8n-workflow';
 import { eledoUrl } from '../../../../shared/eledo/constants/url';
 
 type EledoSchemaResponse = {
 	schema?: {
 		type?: string;
-		properties?: Record<string, unknown>;
+		properties?: JsonObject;
 	};
 };
 
@@ -39,7 +39,7 @@ function pickPrimitiveFields(
 	for (const [key, def] of Object.entries(props)) {
 		if (!def || typeof def !== 'object') continue;
 
-		const t = (def as Record<string, unknown>).type;
+		const t = (def as JsonObject).type;
 		if (typeof t === 'string' && allowed.has(t as PrimitiveType)) {
 			out.push({ key, type: t as PrimitiveType });
 		}
