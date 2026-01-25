@@ -1,8 +1,10 @@
-import { NodeConnectionTypes, type INodeType, type INodeTypeDescription, IExecuteFunctions, INodeExecutionData } from 'n8n-workflow';
+import { NodeConnectionTypes, IExecuteFunctions, INodeExecutionData } from 'n8n-workflow';
+import type { INodeType, INodeTypeDescription } from 'n8n-workflow';
 import { documentDescription } from './resources/document';
 import { getTemplates } from './resources/document/list';
 import { getTemplateTextAndNumberFields, getTemplateBooleanFields, getTemplateDateFields } from './resources/document/schema';
 import { executeDocumentGenerate } from './resources/document/generate-execute';
+import { ELEDO_CREDENTIALS } from '../../shared/eledo/constants/credentials';
 
 export class Eledo implements INodeType {
 	description: INodeTypeDescription = {
@@ -19,7 +21,7 @@ export class Eledo implements INodeType {
 		usableAsTool: true,
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],
-		credentials: [{ name: 'eledoApi', required: true }],
+		credentials: [{ name: ELEDO_CREDENTIALS.API, required: true }],
 		requestDefaults: {
 			headers: {
 				Accept: 'application/json',
@@ -53,6 +55,25 @@ export class Eledo implements INodeType {
 		},
 	};
 
+	/**
+	 * Main execution entry point for the Eledo node.
+	 *
+	 * This node uses n8n's programmatic API to allow fine-grained control
+	 * over execution flow and to support multiple resources and operations
+	 * within a single node implementation.
+	 *
+	 * The execute method itself intentionally contains minimal logic.
+	 * It acts as a dispatcher, routing each input item to a dedicated
+	 * operation-specific handler (e.g. document.generate).
+	 *
+	 * This structure keeps business logic isolated in helper execute
+	 * functions and makes the node easily extensible as new resources
+	 * or operations are added in the future.
+	 * 
+	 * Operation handlers are invoked using Function.call to preserve
+	 * the n8n execution context (this), which provides access to node
+	 * parameters, helpers, and credentials.
+	 */
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
 		const returnItems = [];

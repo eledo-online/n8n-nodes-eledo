@@ -7,9 +7,10 @@ import type {
 } from 'n8n-workflow';
 
 import { eledoUrl } from '../shared/eledo/constants/url';
+import { ELEDO_CREDENTIALS } from '../shared/eledo/constants/credentials';
 
 export class EledoApi implements ICredentialType {
-	name = 'eledoApi';
+	name = ELEDO_CREDENTIALS.API;
 
 	displayName = 'Eledo API';
 
