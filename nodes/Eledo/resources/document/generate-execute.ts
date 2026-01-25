@@ -41,7 +41,7 @@ type OutputType = typeof OUTPUT_TYPE[keyof typeof OUTPUT_TYPE];
 type GenerateRequestBody = {
 	templateId: string;
 	templateVersion?: number;
-	file?: JsonObject;
+	file: JsonObject | null;
 };
 
 type FixedCollectionRows = {
@@ -174,7 +174,8 @@ function buildFileFromGuidedFields(this: IExecuteFunctions, itemIndex: number): 
  * Key behaviors:
  * - `templateId` is mandatory and validated here.
  * - `templateVersion` is included only when explicitly enabled.
- * - The `file` object is optional and omitted entirely when empty.
+ * - The `file` field is always included. If no input data is provided,
+ *   `file` is sent as `null` (Eledo accepts partial payloads).
  *
  * This function performs only structural validation:
  * - JSON syntax and object shape are validated for JSON input.
@@ -211,9 +212,13 @@ function buildGenerateRequestBody(this: IExecuteFunctions, itemIndex: number): J
 		fileObj = buildFileFromGuidedFields.call(this, itemIndex);
 	}
 
-	const body: GenerateRequestBody = { templateId };
+	// Eledo API contract (validated): `file` must be present; `null` is allowed.
+	const body: GenerateRequestBody = {
+		templateId,
+		file: fileObj ?? null,
+	};
+	
 	if (templateVersion !== undefined) body.templateVersion = templateVersion;
-	if (fileObj !== undefined) body.file = fileObj;
 
 	return body;
 }
