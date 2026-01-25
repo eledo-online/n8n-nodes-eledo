@@ -1,0 +1,64 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "Notes": {
+        "type": "String"
+      },
+      "QuoteNo": {
+        "type": "String"
+      },
+      "CreatedOn": {
+        "type": "String"
+      },
+      "Client": {
+        "title": "Client",
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "String"
+          },
+          "AddressLine1": {
+            "type": "String"
+          },
+          "AddressLine2": {
+            "type": "String"
+          },
+          "Phone": {
+            "type": "String"
+          },
+          "Email": {
+            "type": "String"
+          }
+        }
+      },
+      "ClientID": {
+        "type": "String"
+      },
+      "ExpirationDate": {
+        "type": "String"
+      },
+      "PaymentTerms": {
+        "type": "String"
+      },
+      "items": {
+        "title": "items",
+        "type": "array",
+        "items": {
+          "Name": {
+            "type": "String"
+          },
+          "Price": {
+            "type": "Number"
+          },
+          "Quantity": {
+            "type": "Number"
+          }
+        }
+      },
+      "DiscountPercent": {
+        "type": "Number"
+      }
+    }
+  }
+}

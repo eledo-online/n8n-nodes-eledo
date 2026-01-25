@@ -1,0 +1,82 @@
+{
+  "schema": {
+    "name": "fields",
+    "label": "Custom Fields",
+    "type": "collection",
+    "spec": [
+      {
+        "name": "Notes",
+        "type": "text"
+      },
+      {
+        "name": "QuoteNo",
+        "type": "text"
+      },
+      {
+        "name": "CreatedOn",
+        "type": "text"
+      },
+      {
+        "name": "Client",
+        "type": "collection",
+        "spec": [
+          {
+            "name": "Name",
+            "type": "text"
+          },
+          {
+            "name": "AddressLine1",
+            "type": "text"
+          },
+          {
+            "name": "AddressLine2",
+            "type": "text"
+          },
+          {
+            "name": "Phone",
+            "type": "text"
+          },
+          {
+            "name": "Email",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "name": "ClientID",
+        "type": "text"
+      },
+      {
+        "name": "ExpirationDate",
+        "type": "text"
+      },
+      {
+        "name": "PaymentTerms",
+        "type": "text"
+      },
+      {
+        "name": "items",
+        "type": "array",
+        "editable": true,
+        "spec": [
+          {
+            "name": "Name",
+            "type": "text"
+          },
+          {
+            "name": "Price",
+            "type": "number"
+          },
+          {
+            "name": "Quantity",
+            "type": "number"
+          }
+        ]
+      },
+      {
+        "name": "DiscountPercent",
+        "type": "number"
+      }
+    ]
+  }
+}

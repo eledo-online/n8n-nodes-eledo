@@ -1,0 +1,23 @@
+{
+  "total": 2,
+  "templates": [
+    {
+      "id": "6916fbcc97475512021a8399",
+      "date": 1763113932000,
+      "name": "Copy of Example: Introduction",
+      "thumbnailUrl": "https://eledo.online/images/download/6916fbcd97475512021a839a?t=11jn9nitl4sibxj8zq23imbi71sv7sx051vt0f1loox9fkrpisq",
+      "type": 0,
+      "version": 1,
+      "bulk": false
+    },
+    {
+      "id": "6916f96f97475512021a8392",
+      "date": 1763113327000,
+      "name": "Copy of Quote",
+      "thumbnailUrl": "https://eledo.online/images/download/6916f96f97475512021a8393?t=hgs84wronddd8wjsvzkuoe3zlrozd4cbct9x16xmk5k7okwf5",
+      "type": 0,
+      "version": 1,
+      "bulk": false
+    }
+  ]
+}

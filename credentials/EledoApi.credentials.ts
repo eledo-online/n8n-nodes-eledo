@@ -6,12 +6,15 @@ import type {
 	INodeProperties,
 } from 'n8n-workflow';
 
+import { eledoUrl } from '../shared/eledo/constants/url';
+import { ELEDO_CREDENTIALS } from '../shared/eledo/constants/credentials';
+
 export class EledoApi implements ICredentialType {
-	name = 'eledoApi';
+	name = ELEDO_CREDENTIALS.API;
 
 	displayName = 'Eledo API';
 
-	icon: Icon = { light: 'file:../icons/eledo.svg', dark: 'file:../icons/eledo.dark.svg' };
+	icon: Icon = { light: 'file:../shared/eledo/icons/eledo.svg', dark: 'file:../shared/eledo/icons/eledo.dark.svg' };
 
 	documentationUrl = 'https://github.com/eledo-online/n8n-nodes-eledo/blob/main/README.md#credentials';
 
@@ -23,6 +26,7 @@ export class EledoApi implements ICredentialType {
 			typeOptions: { password: true },
 			required: true,
 			default: '',
+			description: 'Create or copy your API key in Eledo → API Details: https://eledo.online/api',
 		},
 	];
 
@@ -30,15 +34,14 @@ export class EledoApi implements ICredentialType {
 		type: 'generic',
 		properties: {
 			headers: {
-				'x-api-key': '={{$credentials.apiKey}}',
+				'Api-Key': '={{$credentials.apiKey}}',
 			},
 		},
 	};
 
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'https://eledo.online/api/RESTv1',
-			url: '/v1/user',
+			url: eledoUrl('/Profile'),
 		},
 	};
 }
