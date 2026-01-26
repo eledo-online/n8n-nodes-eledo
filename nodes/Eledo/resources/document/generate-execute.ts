@@ -195,9 +195,20 @@ function buildGenerateRequestBody(this: IExecuteFunctions, itemIndex: number): J
 	}
 
 	const useTemplateVersion = this.getNodeParameter('useTemplateVersion', itemIndex) as boolean;
-	const templateVersionRaw = this.getNodeParameter('templateVersion', itemIndex, undefined);
-	const templateVersion =
-		useTemplateVersion && typeof templateVersionRaw === 'number' ? templateVersionRaw : undefined;
+
+	let templateVersion: number | undefined;
+
+	if (useTemplateVersion) {
+		const raw = this.getNodeParameter('templateVersion', itemIndex) as unknown;
+
+		if (typeof raw !== 'number' || !Number.isFinite(raw) || !Number.isInteger(raw) || raw < 1) {
+			throw new NodeApiError(this.getNode(), {
+				message: 'Template Version must be an integer number ≥ 1.',
+			});
+		}
+
+		templateVersion = raw;
+	}
 
 	const inputMode = this.getNodeParameter('inputMode', itemIndex) as InputMode;
 
@@ -217,7 +228,7 @@ function buildGenerateRequestBody(this: IExecuteFunctions, itemIndex: number): J
 		templateId,
 		file: fileObj ?? null,
 	};
-	
+
 	if (templateVersion !== undefined) body.templateVersion = templateVersion;
 
 	return body;
