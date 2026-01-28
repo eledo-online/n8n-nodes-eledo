@@ -16,16 +16,20 @@ export function isJsonObject(value: unknown): value is JsonObject {
 /**
  * Extracts a filename from a Content-Disposition header value.
  *
- * Supports common forms like:
+ * Supports common forms such as:
  * - `attachment; filename="file_name.pdf"`
  * - `attachment; filename=file_name.pdf`
- * - `attachment; filename*=UTF-8''file_name.pdf` (RFC 5987 style)
+ * - `attachment; filename*=UTF-8''file_name.pdf` (RFC 5987)
  *
- * Returns undefined if no filename can be found or the header is empty.
+ * Observed behavior (Eledo):
+ * - The header may include *both* `filename` and `filename*` parameters
+ * - Either variant may appear first; this function accepts both
+ *
+ * Returns `undefined` if no filename can be extracted or the header is empty.
  *
  * Notes:
- * - This function is best-effort and intentionally non-throwing.
- * - If percent-decoding fails, it returns the raw captured value.
+ * - Best-effort and intentionally non-throwing
+ * - If percent-decoding fails, the raw captured value is returned
  */
 export function extractFilename(contentDisposition?: string): string | undefined {
 	if (!contentDisposition) return;
