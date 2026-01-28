@@ -1,6 +1,6 @@
 {
   "name": "@eledo/n8n-nodes-eledo",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Generate PDFs with Eledo directly in n8n workflows.",
   "license": "MIT",
   "homepage": "https://github.com/eledo-online/n8n-nodes-eledo#readme",
@@ -22,7 +22,11 @@
     "release": "n8n-node release",
     "prepublishOnly": "n8n-node prerelease"
   },
-  "files": ["dist"],
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
   "n8n": {
     "n8nNodesApiVersion": 1,
     "strict": true,
@@ -31,10 +35,10 @@
   },
   "devDependencies": {
     "@n8n/node-cli": "*",
-    "eslint": "9.32.0",
+    "eslint": "9.39.2",
     "prettier": "3.8.1",
-    "release-it": "^19.0.4",
-    "typescript": "5.9.2"
+    "release-it": "^19.2.4",
+    "typescript": "5.9.3"
   },
   "peerDependencies": { "n8n-workflow": "*" }
 }
