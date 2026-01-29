@@ -332,6 +332,6 @@ export async function executeDocumentGenerate(this: IExecuteFunctions, itemIndex
 	}
 
 	// outputType === OUTPUT_TYPE.FILE
-	out.binary!.pdf = await this.helpers.prepareBinaryData(resp.body, filename, 'application/pdf');
+	out.binary!.document = await this.helpers.prepareBinaryData(resp.body, filename, 'application/pdf');
 	return out;
 }
