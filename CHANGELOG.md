@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-01-31
+
+### Added
+
+* Comprehensive **unit test suite** covering core helpers, `/List`, `/Schema`, and `/Generate` execution paths.
+* Automated **code coverage reporting** via Vitest and Codecov, including CI integration and public coverage badge.
+* Test fixtures capturing real-world Eledo API payloads (success and error cases) to document undocumented behavior and prevent regressions.
+
+### Changed
+
+* Updated Generate operation binary output key from `binary.pdf` to `binary.document` to better align with n8n conventions and downstream node expectations.
+* Refined internal test and fixture organization to keep published npm artifacts lean while preserving full internal coverage.
+
+### Notes
+
+* This is a **non-breaking** quality-focused release.
+* No runtime behavior changes for end users beyond the binary output key rename.
+* The node now ships with production-grade automated validation of all documented API contracts.
+
 ## [1.0.0] - 2026-01-28
 
 ### Added
@@ -39,7 +58,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * This release represents the first **production-ready** version of the Eledo n8n node.
 * Manual end-to-end testing against the live Eledo API has been completed.
-* Unit tests are planned and will be introduced in a follow-up release (1.0.1) without breaking changes.
 
 ## [0.1.0] - 2025-12-18
 
@@ -55,5 +73,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * This release is a baseline scaffold and has not yet been validated in a live n8n instance.
 
+[1.0.1]: https://github.com/eledo-online/n8n-nodes-eledo/releases/tag/v1.0.1
 [1.0.0]: https://github.com/eledo-online/n8n-nodes-eledo/releases/tag/v1.0.0
 [0.1.0]: https://github.com/eledo-online/n8n-nodes-eledo/releases/tag/v0.1.0
