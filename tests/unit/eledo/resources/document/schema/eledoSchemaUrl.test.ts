@@ -1,33 +1,5 @@
-import { vi, describe, it, expect } from 'vitest';
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { describe, it, expect } from 'vitest';
 import { eledoSchemaUrl } from '../../../../../../nodes/Eledo/resources/document/schema';
-
-function makeCtx(params: Record<string, unknown> = {}) {
-	const httpCall = vi.fn();
-
-	const ctx: any = {
-		getNode: vi.fn(() => ({ name: 'Eledo' })),
-		getCurrentNodeParameter: vi.fn((key: string) => params[key]),
-		helpers: {
-			httpRequestWithAuthentication: {
-				call: httpCall,
-			},
-		},
-	};
-
-	return { ctx, httpCall };
-}
-
-const fixturesDir = path.resolve(
-	path.dirname(fileURLToPath(import.meta.url)),
-	'../../../../../fixtures/eledo/schema',
-);
-
-function readFixture(name: string): unknown {
-	return JSON.parse(fs.readFileSync(path.join(fixturesDir, name), 'utf8'));
-}
 
 describe('eledeSchemaUrl', () => {
 	it('builds /Schema/<id> for latest schema', () => {

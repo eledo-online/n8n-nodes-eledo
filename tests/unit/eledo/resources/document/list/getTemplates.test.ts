@@ -2,23 +2,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { eledoUrl } from '../../../../../../shared/eledo/constants/url';
+import { ELEDO_CREDENTIALS } from '../../../../../../shared/eledo/constants/credentials';
 
-// ✅ import the function under test
 import { getTemplates,
     	TEMPLATE_SCOPE,
 	    ELEDO_LIST_SCOPE,
  } from '../../../../../../nodes/Eledo/resources/document/list';
-
-// ✅ import constants used by getTemplates so you can assert precisely
-import {
-	ELEDO_CREDENTIALS,
-} from '../../../../../../shared/eledo/constants/credentials';
-
-// Optional: if you want to assert exact URL called, import eledoUrl and BASE_URL,
-// otherwise just assert it ends with '/List'
-import { eledoUrl } from '../../../../../../shared/eledo/constants/url';
-
-// ---- helpers (keep in this file for now) ----
 
 type MockLoadCtx = {
 	getCurrentNodeParameter: (name: string) => unknown;
@@ -54,8 +44,6 @@ async function loadJsonFixture(rel: string): Promise<unknown> {
 	const raw = await readFile(p, 'utf8');
 	return JSON.parse(raw);
 }
-
-// ---- tests ----
 
 describe('getTemplates', () => {
 	beforeEach(() => {

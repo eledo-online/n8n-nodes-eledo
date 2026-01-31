@@ -1,7 +1,4 @@
 import { vi, describe, it, expect } from 'vitest';
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { NodeOperationError } from 'n8n-workflow';
 import { fetchTemplateSchema } from '../../../../../../nodes/Eledo/resources/document/schema';
 import { ELEDO_CREDENTIALS } from '../../../../../../shared/eledo/constants/credentials';
@@ -20,15 +17,6 @@ function makeCtx(params: Record<string, unknown> = {}) {
 	};
 
 	return { ctx, httpCall };
-}
-
-const fixturesDir = path.resolve(
-	path.dirname(fileURLToPath(import.meta.url)),
-	'../../../../../fixtures/eledo/schema',
-);
-
-function readFixture(name: string): unknown {
-	return JSON.parse(fs.readFileSync(path.join(fixturesDir, name), 'utf8'));
 }
 
 describe('fetchTemplateSchema', () => {

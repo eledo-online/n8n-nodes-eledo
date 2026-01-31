@@ -5,10 +5,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { executeDocumentGenerate } from '../../../../../../nodes/Eledo/resources/document/generate-execute';
 
-function abFromString(s: string): ArrayBuffer {
-	return new TextEncoder().encode(s).buffer;
-}
-
 const fixturesDir = path.resolve(
     path.dirname(fileURLToPath(import.meta.url)),
     '../../../../../fixtures/eledo/generate',
@@ -16,21 +12,6 @@ const fixturesDir = path.resolve(
 
 function readFixture(name: string): unknown {
     return JSON.parse(fs.readFileSync(path.join(fixturesDir, name), 'utf8'));
-}
-
-function getNodeErrorPayload(err: unknown): unknown {
-	if (!err || typeof err !== 'object') return undefined;
-
-	const e = err as any;
-
-	// common n8n locations across versions
-	return (
-		e?.context ??
-		e?.description ??
-		e?.cause ??
-		e?.error ??
-		undefined
-	);
 }
 
 describe('executeDocumentGenerate (errors)', () => {
