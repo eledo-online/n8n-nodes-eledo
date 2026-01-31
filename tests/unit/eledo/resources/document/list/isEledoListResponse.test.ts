@@ -1,3 +1,4 @@
+// eslint-disable-next-line @n8n/community-nodes/no-restricted-imports
 import { describe, it, expect } from 'vitest';
 import { readFixtureJson } from '../../../../../utils/fixtures'
 import { isEledoListResponse } from '../../../../../../nodes/Eledo/resources/document/list';

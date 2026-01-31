@@ -1,4 +1,5 @@
-import { vi, describe, it, expect } from 'vitest';
+// eslint-disable-next-line @n8n/community-nodes/no-restricted-imports
+import { describe, it, expect } from 'vitest';
 import { NodeOperationError } from 'n8n-workflow';
 import { fetchTemplateSchema } from '../../../../../../nodes/Eledo/resources/document/schema';
 import { ELEDO_CREDENTIALS } from '../../../../../../shared/eledo/constants/credentials';

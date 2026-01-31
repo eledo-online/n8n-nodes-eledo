@@ -1,3 +1,4 @@
+// eslint-disable-next-line @n8n/community-nodes/no-restricted-imports
 import { describe, it, expect } from 'vitest';
 import { callGenerate } from '../../../../../../nodes/Eledo/resources/document/generate-execute';
 import { ELEDO_CREDENTIALS } from '../../../../../../shared/eledo/constants/credentials';

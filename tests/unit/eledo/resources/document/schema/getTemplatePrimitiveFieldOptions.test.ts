@@ -1,4 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @n8n/community-nodes/no-restricted-imports
+import { describe, it, expect } from 'vitest';
 import { getTemplatePrimitiveFieldOptions } from '../../../../../../nodes/Eledo/resources/document/schema';
 import { makeLoadOptionsCtx } from '../../../../../utils/n8n'
 

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @n8n/community-nodes/no-restricted-imports
 import { describe, it, expect, vi } from 'vitest';
 import { NodeApiError } from 'n8n-workflow';
 import { executeDocumentGenerate } from '../../../../../../nodes/Eledo/resources/document/generate-execute';

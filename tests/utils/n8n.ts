@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @n8n/community-nodes/no-restricted-imports
 import { vi } from 'vitest';
 
 type CtxBase = {

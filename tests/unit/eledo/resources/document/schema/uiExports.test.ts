@@ -1,4 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
+// eslint-disable-next-line @n8n/community-nodes/no-restricted-imports
+import { describe, it, expect } from 'vitest';
 import { makeLoadOptionsCtx } from '../../../../../utils/n8n'
 import {
 	getTemplateTextAndNumberFields,

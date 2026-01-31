@@ -1,3 +1,4 @@
+// eslint-disable-next-line @n8n/community-nodes/no-restricted-imports
 import { describe, it, expect } from 'vitest';
 import { eledoUrl } from '../../../../../shared/eledo/constants/url';
 
