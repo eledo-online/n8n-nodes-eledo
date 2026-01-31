@@ -81,7 +81,8 @@ type GenerateHttpResponse = {
  * @param v Raw field value from the node UI
  * @returns A string, number, or null suitable for inclusion in a JSON payload
  */
-function coerceTextOrNumberValue(v: unknown): string | number | null {
+/** @internal Test-only export */
+export function coerceTextOrNumberValue(v: unknown): string | number | null {
   if (v === '' || v === null || v === undefined) return null;
 
   const n = coerceNumberMaybe(v);
@@ -125,7 +126,8 @@ function coerceTextOrNumberValue(v: unknown): string | number | null {
  * @returns A JSON object representing the `file` payload, or
  *          `undefined` if no fields were provided
  */
-function buildFileFromGuidedFields(this: IExecuteFunctions, itemIndex: number): JsonObject | undefined {
+/** @internal Test-only export */
+export function buildFileFromGuidedFields(this: IExecuteFunctions, itemIndex: number): JsonObject | undefined {
 	const file: JsonObject = {};
 	const tn = this.getNodeParameter('textAndNumberFields', itemIndex, {}) as FixedCollectionRows;
 	const tnRows = tn.field ?? [];
@@ -188,7 +190,8 @@ function buildFileFromGuidedFields(this: IExecuteFunctions, itemIndex: number): 
  * @returns A fully constructed request body for the Generate API
  * @throws NodeApiError if required parameters are missing or invalid
  */
-function buildGenerateRequestBody(this: IExecuteFunctions, itemIndex: number): JsonObject {
+/** @internal Test-only export */
+export function buildGenerateRequestBody(this: IExecuteFunctions, itemIndex: number): JsonObject {
 	const templateId = this.getNodeParameter('templateId', itemIndex) as string;
 	if (!templateId) {
 		throw new NodeApiError(this.getNode(), { message: 'Template is required.' });
@@ -256,8 +259,8 @@ function buildGenerateRequestBody(this: IExecuteFunctions, itemIndex: number): J
  * @param body Fully constructed Generate request body
  * @returns Full HTTP response including binary PDF body and headers
  */
-
-async function callGenerate(this: IExecuteFunctions, body: JsonObject): Promise<GenerateHttpResponse> {
+/** @internal Test-only export */
+export async function callGenerate(this: IExecuteFunctions, body: JsonObject): Promise<GenerateHttpResponse> {
 	const options: IHttpRequestOptions = {
 		method: 'POST',
 		url: eledoUrl('/Generate'),

@@ -41,7 +41,8 @@ type PrimitiveType = typeof PRIMITIVE_TYPE[keyof typeof PRIMITIVE_TYPE];
  * If a template version is provided, the versioned schema is requested.
  * Otherwise, the default (latest) schema is used.
  */
-function eledoSchemaUrl(templateId: string, templateVersion?: number): string {
+/** @internal Test-only export */
+export function eledoSchemaUrl(templateId: string, templateVersion?: number): string {
 	const safeId = encodeURIComponent(templateId);
 
 	const path =
@@ -58,7 +59,8 @@ function eledoSchemaUrl(templateId: string, templateVersion?: number): string {
  * This guard only verifies that a `schema` field is present.
  * Detailed validation is performed downstream as fields are extracted.
  */
-function isEledoSchemaResponse(value: unknown): value is EledoSchemaResponse {
+/** @internal Test-only export */
+export function isEledoSchemaResponse(value: unknown): value is EledoSchemaResponse {
 	if (!isJsonObject(value)) return false;
 	return 'schema' in value;
 }
@@ -73,7 +75,8 @@ function isEledoSchemaResponse(value: unknown): value is EledoSchemaResponse {
  *
  * Nested objects and arrays are ignored by design.
  */
-function pickPrimitiveFields(
+/** @internal Test-only export */
+export function pickPrimitiveFields(
 	schema: EledoSchemaResponse,
 	allowed: ReadonlySet<PrimitiveType>,
 ): Array<{ key: string; type: PrimitiveType }> {
@@ -101,7 +104,8 @@ function pickPrimitiveFields(
  * response shape. It accepts explicit inputs and does not read node parameters,
  * which keeps it easy to test and reuse.
  */
-async function fetchTemplateSchema(
+/** @internal Test-only export */
+export async function fetchTemplateSchema(
 	this: ILoadOptionsFunctions,
 	templateId: string,
 	templateVersion?: number,
@@ -138,7 +142,8 @@ async function fetchTemplateSchema(
  * 
  * Returns the latest schema unless a specific version is enabled.
  */
-async function loadTemplateSchema(
+/** @internal Test-only export */
+export async function loadTemplateSchema(
 	this: ILoadOptionsFunctions,
 ): Promise<EledoSchemaResponse | null> {
 	const templateId = this.getCurrentNodeParameter('templateId') as string;
@@ -181,7 +186,8 @@ const ALLOWED_DATE = new Set<PrimitiveType>([PRIMITIVE_TYPE.DATE]);
  * The schema is fetched fresh on each invocation to reflect the latest template
  * state and avoid hidden caching assumptions.
  */
-async function getTemplatePrimitiveFieldOptions(
+/** @internal Test-only export */
+export async function getTemplatePrimitiveFieldOptions(
 	this: ILoadOptionsFunctions,
 	allowed: ReadonlySet<PrimitiveType>,
 	describe: (t: PrimitiveType) => string,

@@ -25,3 +25,6 @@ Thumbs.db
 
 # n8n local runtime data (if used)
 .n8n/
+
+# Coverage reports
+coverage/

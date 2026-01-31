@@ -15,12 +15,14 @@ interface EledoListResponse {
 	templates: EledoTemplate[];
 }
 
-const TEMPLATE_SCOPE = {
+/** @internal Test-only export */
+export const TEMPLATE_SCOPE = {
 	PRIVATE: 'private',
 	PUBLIC: 'public',
 } as const;
 
-const ELEDO_LIST_SCOPE = {
+/** @internal Test-only export */
+export const ELEDO_LIST_SCOPE = {
 	PRIVATE: 'Mine',
 	PUBLIC: 'Public',
 } as const;
@@ -32,7 +34,8 @@ const ELEDO_LIST_SCOPE = {
  * before being used by the node. Downstream logic assumes `templates` is an array
  * of objects with at least `{ id: string, name: string }`.
  */
-function isEledoListResponse(value: unknown): value is EledoListResponse {
+/** @internal Test-only export */
+export function isEledoListResponse(value: unknown): value is EledoListResponse {
 	if (!isJsonObject(value)) return false;
 	const templates = value.templates;
 	if (!Array.isArray(templates)) return false;
