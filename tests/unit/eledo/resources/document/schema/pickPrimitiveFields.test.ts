@@ -1,21 +1,5 @@
-import { vi, describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { pickPrimitiveFields } from '../../../../../../nodes/Eledo/resources/document/schema';
-
-function makeCtx(params: Record<string, unknown> = {}) {
-	const httpCall = vi.fn();
-
-	const ctx: any = {
-		getNode: vi.fn(() => ({ name: 'Eledo' })),
-		getCurrentNodeParameter: vi.fn((key: string) => params[key]),
-		helpers: {
-			httpRequestWithAuthentication: {
-				call: httpCall,
-			},
-		},
-	};
-
-	return { ctx, httpCall };
-}
 
 describe('pickPrimitiveFields', () => {
 	it('returns [] when schema has no properties', () => {

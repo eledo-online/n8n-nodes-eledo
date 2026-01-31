@@ -1,25 +1,14 @@
 import { describe, it, expect, vi } from 'vitest';
 import { NodeApiError } from 'n8n-workflow';
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { executeDocumentGenerate } from '../../../../../../nodes/Eledo/resources/document/generate-execute';
-
-const fixturesDir = path.resolve(
-    path.dirname(fileURLToPath(import.meta.url)),
-    '../../../../../fixtures/eledo/generate',
-);
-
-function readFixture(name: string): unknown {
-    return JSON.parse(fs.readFileSync(path.join(fixturesDir, name), 'utf8'));
-}
+import { readFixtureJson } from '../../../../../utils/fixtures'
 
 describe('executeDocumentGenerate (errors)', () => {
 	it('throws NodeApiError when Eledo returns application/json error payload (fixture)', async () => {
 		const fixture = { error: 'Request Body is empty, or not a valid JSON' };
 
 		const httpCall = vi.fn().mockResolvedValueOnce({
-			body: readFixture('generate.http.no.body.payload.error.json'),
+			body: readFixtureJson('eledo', 'generate', 'generate.http.no.body.payload.error.json'),
 			headers: { 'content-type': 'application/json' },
 			statusCode: 400,
 		});

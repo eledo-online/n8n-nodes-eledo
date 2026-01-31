@@ -1,49 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { readFile } from 'node:fs/promises';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { eledoUrl } from '../../../../../../shared/eledo/constants/url';
 import { ELEDO_CREDENTIALS } from '../../../../../../shared/eledo/constants/credentials';
+import { readFixtureJson } from '../../../../../utils/fixtures'
+import { makeLoadOptionsCtx } from '../../../../../utils/n8n'
 
 import { getTemplates,
     	TEMPLATE_SCOPE,
 	    ELEDO_LIST_SCOPE,
  } from '../../../../../../nodes/Eledo/resources/document/list';
-
-type MockLoadCtx = {
-	getCurrentNodeParameter: (name: string) => unknown;
-	getNode: () => unknown;
-	helpers: {
-		httpRequestWithAuthentication: {
-			call: ReturnType<typeof vi.fn>;
-		};
-	};
-};
-
-function makeCtx(params?: { templateScope?: string }): MockLoadCtx {
-	return {
-		getCurrentNodeParameter: vi.fn((name: string) => {
-			if (name === 'templateScope') return params?.templateScope;
-			return undefined;
-		}),
-		getNode: vi.fn(() => ({ name: 'Eledo (test node)' })),
-		helpers: {
-			httpRequestWithAuthentication: {
-				call: vi.fn(),
-			},
-		},
-	};
-}
-
-async function loadJsonFixture(rel: string): Promise<unknown> {
-	const fixturesDir = path.resolve(
-		path.dirname(fileURLToPath(import.meta.url)),
-		'../../../../../fixtures/eledo/templates',
-	);
-	const p = path.join(fixturesDir, rel);
-	const raw = await readFile(p, 'utf8');
-	return JSON.parse(raw);
-}
 
 describe('getTemplates', () => {
 	beforeEach(() => {
@@ -51,10 +15,10 @@ describe('getTemplates', () => {
 	});
 
 	it('calls /List with default (private) scope mapped to Mine and returns options', async () => {
-		const ctx = makeCtx({ templateScope: TEMPLATE_SCOPE.PRIVATE });
-		const fixture = await loadJsonFixture('list.scope.mine.v1.ok.json');
+		const { ctx, httpCall } = makeLoadOptionsCtx({ templateScope: TEMPLATE_SCOPE.PRIVATE });
+		const fixture = readFixtureJson('eledo', 'templates', 'list.scope.mine.v1.ok.json');
 
-		ctx.helpers.httpRequestWithAuthentication.call.mockResolvedValueOnce(fixture);
+		httpCall.mockResolvedValueOnce(fixture);
 
 		const out = await getTemplates.call(ctx as any);
 
@@ -93,10 +57,10 @@ describe('getTemplates', () => {
 	});
 
 	it('maps public UI scope to Public for Eledo API', async () => {
-		const ctx = makeCtx({ templateScope: TEMPLATE_SCOPE.PUBLIC });
-		const fixture = await loadJsonFixture('list.scope.public.v1.ok.json');
+		const { ctx, httpCall } = makeLoadOptionsCtx({ templateScope: TEMPLATE_SCOPE.PUBLIC });
+		const fixture = readFixtureJson('eledo', 'templates', 'list.scope.public.v1.ok.json');
 
-		ctx.helpers.httpRequestWithAuthentication.call.mockResolvedValueOnce(fixture);
+		httpCall.mockResolvedValueOnce(fixture);
 
 		await getTemplates.call(ctx as any);
 
@@ -105,10 +69,10 @@ describe('getTemplates', () => {
 	});
 
 	it('adds description only for bulk templates', async () => {
-		const ctx = makeCtx({ templateScope: TEMPLATE_SCOPE.PRIVATE });
+		const { ctx, httpCall } = makeLoadOptionsCtx({ templateScope: TEMPLATE_SCOPE.PRIVATE });
 
 		// minimal inline fixture (no need to rely on disk for this one)
-		ctx.helpers.httpRequestWithAuthentication.call.mockResolvedValueOnce({
+		httpCall.mockResolvedValueOnce({
 			templates: [
 				{ id: 'a', name: 'A', bulk: true, version: 1 },
 				{ id: 'b', name: 'B', bulk: false, version: 1 },
@@ -124,9 +88,9 @@ describe('getTemplates', () => {
 	});
 
 	it('throws NodeOperationError with context when the API call fails', async () => {
-		const ctx = makeCtx({ templateScope: TEMPLATE_SCOPE.PRIVATE });
+		const { ctx, httpCall } = makeLoadOptionsCtx({ templateScope: TEMPLATE_SCOPE.PRIVATE });
 
-		ctx.helpers.httpRequestWithAuthentication.call.mockRejectedValueOnce(new Error('boom'));
+		httpCall.mockRejectedValueOnce(new Error('boom'));
 
 		await expect(getTemplates.call(ctx as any)).rejects.toMatchObject({
 			name: 'NodeOperationError',
@@ -135,9 +99,9 @@ describe('getTemplates', () => {
 	});
 
 	it('throws NodeOperationError when response does not match expected shape', async () => {
-		const ctx = makeCtx({ templateScope: TEMPLATE_SCOPE.PRIVATE });
+		const { ctx, httpCall } = makeLoadOptionsCtx({ templateScope: TEMPLATE_SCOPE.PRIVATE });
 
-		ctx.helpers.httpRequestWithAuthentication.call.mockResolvedValueOnce({ nope: true });
+		httpCall.mockResolvedValueOnce({ nope: true });
 
 		await expect(getTemplates.call(ctx as any)).rejects.toMatchObject({
 			name: 'NodeOperationError',

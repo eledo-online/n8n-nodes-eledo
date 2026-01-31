@@ -2,26 +2,11 @@ import { vi, describe, it, expect } from 'vitest';
 import { NodeOperationError } from 'n8n-workflow';
 import { fetchTemplateSchema } from '../../../../../../nodes/Eledo/resources/document/schema';
 import { ELEDO_CREDENTIALS } from '../../../../../../shared/eledo/constants/credentials';
-
-function makeCtx(params: Record<string, unknown> = {}) {
-	const httpCall = vi.fn();
-
-	const ctx: any = {
-		getNode: vi.fn(() => ({ name: 'Eledo' })),
-		getCurrentNodeParameter: vi.fn((key: string) => params[key]),
-		helpers: {
-			httpRequestWithAuthentication: {
-				call: httpCall,
-			},
-		},
-	};
-
-	return { ctx, httpCall };
-}
+import { makeLoadOptionsCtx } from '../../../../../utils/n8n'
 
 describe('fetchTemplateSchema', () => {
 	it('calls /Schema/<id> (latest) and returns response', async () => {
-		const { ctx, httpCall } = makeCtx();
+		const { ctx, httpCall } = makeLoadOptionsCtx();
 		httpCall.mockResolvedValueOnce({ schema: { properties: {} } });
 
 		const out = await fetchTemplateSchema.call(ctx, 'tpl1');
@@ -34,7 +19,7 @@ describe('fetchTemplateSchema', () => {
 	});
 
 	it('calls /Schema/<id>/<version> when version provided', async () => {
-		const { ctx, httpCall } = makeCtx();
+		const { ctx, httpCall } = makeLoadOptionsCtx();
 		httpCall.mockResolvedValueOnce({ schema: { properties: {} } });
 
 		await fetchTemplateSchema.call(ctx, 'tpl1', 2);
@@ -45,14 +30,14 @@ describe('fetchTemplateSchema', () => {
 	});
 
 	it('throws NodeOperationError on request failure', async () => {
-		const { ctx, httpCall } = makeCtx();
+		const { ctx, httpCall } = makeLoadOptionsCtx();
 		httpCall.mockRejectedValueOnce(new Error('boom'));
 
 		await expect(fetchTemplateSchema.call(ctx, 'tpl1')).rejects.toBeInstanceOf(NodeOperationError);
 	});
 
 	it('throws NodeOperationError on invalid response', async () => {
-		const { ctx, httpCall } = makeCtx();
+		const { ctx, httpCall } = makeLoadOptionsCtx();
 		httpCall.mockResolvedValueOnce({ nope: true });
 
 		await expect(fetchTemplateSchema.call(ctx, 'tpl1')).rejects.toBeInstanceOf(NodeOperationError);

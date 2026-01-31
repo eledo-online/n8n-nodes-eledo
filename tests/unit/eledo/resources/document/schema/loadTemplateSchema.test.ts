@@ -1,30 +1,15 @@
 import { describe, it, expect, vi } from 'vitest';
 import { loadTemplateSchema } from '../../../../../../nodes/Eledo/resources/document/schema';
-
-function makeCtx(params: Record<string, unknown> = {}) {
-	const httpCall = vi.fn();
-
-	const ctx: any = {
-		getNode: vi.fn(() => ({ name: 'Eledo' })),
-		getCurrentNodeParameter: vi.fn((key: string) => params[key]),
-		helpers: {
-			httpRequestWithAuthentication: {
-				call: httpCall,
-			},
-		},
-	};
-
-	return { ctx, httpCall };
-}
+import { makeLoadOptionsCtx } from '../../../../../utils/n8n'
 
 describe('loadTemplateSchema', () => {
 	it('returns null when templateId missing', async () => {
-		const { ctx } = makeCtx({ templateId: '' });
+		const { ctx } = makeLoadOptionsCtx({ templateId: '' });
 		await expect(loadTemplateSchema.call(ctx)).resolves.toBeNull();
 	});
 
 	it('uses latest schema when useTemplateVersion is false', async () => {
-		const { ctx, httpCall } = makeCtx({
+		const { ctx, httpCall } = makeLoadOptionsCtx({
 			templateId: 'tpl1',
 			useTemplateVersion: false,
 			templateVersion: 9,
@@ -40,7 +25,7 @@ describe('loadTemplateSchema', () => {
 	});
 
 	it('uses versioned schema when enabled and version is number', async () => {
-		const { ctx, httpCall } = makeCtx({
+		const { ctx, httpCall } = makeLoadOptionsCtx({
 			templateId: 'tpl1',
 			useTemplateVersion: true,
 			templateVersion: 3,
@@ -55,7 +40,7 @@ describe('loadTemplateSchema', () => {
 	});
 
 	it('falls back to latest if enabled but version is not a number', async () => {
-		const { ctx, httpCall } = makeCtx({
+		const { ctx, httpCall } = makeLoadOptionsCtx({
 			templateId: 'tpl1',
 			useTemplateVersion: true,
 			templateVersion: '3',

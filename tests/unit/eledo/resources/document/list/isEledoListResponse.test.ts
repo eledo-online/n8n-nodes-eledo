@@ -1,20 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
+import { readFixtureJson } from '../../../../../utils/fixtures'
 import { isEledoListResponse } from '../../../../../../nodes/Eledo/resources/document/list';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const fixturesDir = path.resolve(__dirname, '../../../../../fixtures/eledo/templates');
-
-function loadFixture(name: string): unknown {
-	const p = path.join(fixturesDir, name);
-	return JSON.parse(fs.readFileSync(p, 'utf8'));
-}
-
 
 describe('isEledoListResponse', () => {
 	it('accepts a minimal valid response', () => {
@@ -95,13 +81,13 @@ describe('isEledoListResponse', () => {
 
 describe('isEledoListResponse – fixtures', () => {
 	it('accepts real-world /List success payload', () => {
-		const payload = loadFixture('list.default.scope.v1.ok.json');
+		const payload = readFixtureJson('eledo', 'templates', 'list.default.scope.v1.ok.json');
 
 		expect(isEledoListResponse(payload)).toBe(true);
 	});
 
 	it('rejects payload when template id is missing', () => {
-		const payload = loadFixture('list.missing-id.json');
+		const payload = readFixtureJson('eledo', 'templates', 'list.missing-id.json');
 
 		expect(isEledoListResponse(payload)).toBe(false);
 	});

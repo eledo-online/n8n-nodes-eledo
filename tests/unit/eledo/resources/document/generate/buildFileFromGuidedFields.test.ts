@@ -1,16 +1,10 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { buildFileFromGuidedFields } from '../../../../../../nodes/Eledo/resources/document/generate-execute';
-
-function makeCtx(params: Record<string, any>) {
-	const ctx: any = {
-		getNodeParameter: vi.fn((key: string) => params[key]),
-	};
-	return { ctx };
-}
+import { makeExecuteCtx } from '../../../../../utils/n8n'
 
 describe('buildFileFromGuidedFields', () => {
 	it('returns undefined when no usable fields exist', () => {
-		const { ctx } = makeCtx({
+		const { ctx } = makeExecuteCtx({
 			textAndNumberFields: { field: [{ name: 'x', value: '' }] }, // becomes null -> skipped
 			booleanFields: { field: [{ name: '', value: true }] }, // skipped
 			dateFields: { field: [{ name: 'd', value: '' }] }, // invalid -> skipped
@@ -21,7 +15,7 @@ describe('buildFileFromGuidedFields', () => {
 	});
 
 	it('collects text/number fields and omits null/empty', () => {
-		const { ctx } = makeCtx({
+		const { ctx } = makeExecuteCtx({
 			textAndNumberFields: {
 				field: [
 					{ name: 'name', value: 'John' },
@@ -39,7 +33,7 @@ describe('buildFileFromGuidedFields', () => {
 	});
 
 	it('coerces boolean fields using truthiness', () => {
-		const { ctx } = makeCtx({
+		const { ctx } = makeExecuteCtx({
 			textAndNumberFields: { field: [] },
 			booleanFields: {
 				field: [
@@ -57,7 +51,7 @@ describe('buildFileFromGuidedFields', () => {
 	});
 
 	it('converts date fields to ISO and skips invalid', () => {
-		const { ctx } = makeCtx({
+		const { ctx } = makeExecuteCtx({
 			textAndNumberFields: { field: [] },
 			booleanFields: { field: [] },
 			dateFields: {

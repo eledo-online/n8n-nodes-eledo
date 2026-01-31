@@ -1,29 +1,14 @@
 import { describe, it, expect, vi } from 'vitest';
+import { makeLoadOptionsCtx } from '../../../../../utils/n8n'
 import {
 	getTemplateTextAndNumberFields,
 	getTemplateBooleanFields,
 	getTemplateDateFields,
 } from '../../../../../../nodes/Eledo/resources/document/schema';
 
-function makeCtx(params: Record<string, unknown> = {}) {
-	const httpCall = vi.fn();
-
-	const ctx: any = {
-		getNode: vi.fn(() => ({ name: 'Eledo' })),
-		getCurrentNodeParameter: vi.fn((key: string) => params[key]),
-		helpers: {
-			httpRequestWithAuthentication: {
-				call: httpCall,
-			},
-		},
-	};
-
-	return { ctx, httpCall };
-}
-
 describe('UI exports', () => {
 	it('TextAndNumber maps Number->Number else Text', async () => {
-		const { ctx, httpCall } = makeCtx({ templateId: 'tpl1' });
+		const { ctx, httpCall } = makeLoadOptionsCtx({ templateId: 'tpl1' });
 
 		httpCall.mockResolvedValueOnce({
 			schema: { properties: { age: { type: 'Number' }, name: { type: 'String' } } },
@@ -37,7 +22,7 @@ describe('UI exports', () => {
 	});
 
 	it('Boolean returns Boolean description', async () => {
-		const { ctx, httpCall } = makeCtx({ templateId: 'tpl1' });
+		const { ctx, httpCall } = makeLoadOptionsCtx({ templateId: 'tpl1' });
 		httpCall.mockResolvedValueOnce({ schema: { properties: { ok: { type: 'Boolean' } } } });
 
 		const out = await getTemplateBooleanFields.call(ctx);
@@ -45,7 +30,7 @@ describe('UI exports', () => {
 	});
 
 	it('Date returns Date description', async () => {
-		const { ctx, httpCall } = makeCtx({ templateId: 'tpl1' });
+		const { ctx, httpCall } = makeLoadOptionsCtx({ templateId: 'tpl1' });
 		httpCall.mockResolvedValueOnce({ schema: { properties: { when: { type: 'Date' } } } });
 
 		const out = await getTemplateDateFields.call(ctx);

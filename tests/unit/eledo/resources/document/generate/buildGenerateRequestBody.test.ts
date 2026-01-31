@@ -1,18 +1,11 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { NodeApiError } from 'n8n-workflow';
 import { buildGenerateRequestBody } from '../../../../../../nodes/Eledo/resources/document/generate-execute';
-
-function makeCtx(params: Record<string, any>) {
-	const ctx: any = {
-		getNode: vi.fn(() => ({ name: 'Eledo' })),
-		getNodeParameter: vi.fn((key: string) => params[key]),
-	};
-	return { ctx };
-}
+import { makeExecuteCtx } from '../../../../../utils/n8n'
 
 describe('buildGenerateRequestBody', () => {
 	it('throws when templateId missing', () => {
-		const { ctx } = makeCtx({
+		const { ctx } = makeExecuteCtx({
 			templateId: '',
 		});
 
@@ -20,7 +13,7 @@ describe('buildGenerateRequestBody', () => {
 	});
 
 	it('includes templateVersion only when enabled and valid', () => {
-		const { ctx } = makeCtx({
+		const { ctx } = makeExecuteCtx({
 			templateId: 'tpl',
 			useTemplateVersion: true,
 			templateVersion: 2,
@@ -34,7 +27,7 @@ describe('buildGenerateRequestBody', () => {
 
 	it('rejects invalid templateVersion when enabled', () => {
 		const bad = (templateVersion: any) => {
-			const { ctx } = makeCtx({
+			const { ctx } = makeExecuteCtx({
 				templateId: 'tpl',
 				useTemplateVersion: true,
 				templateVersion,
@@ -52,7 +45,7 @@ describe('buildGenerateRequestBody', () => {
 	});
 
 	it('JSON mode: treats payloadJson as file content and sends null for empty object', () => {
-		const { ctx } = makeCtx({
+		const { ctx } = makeExecuteCtx({
 			templateId: 'tpl',
 			useTemplateVersion: false,
 			inputMode: 'json',
@@ -64,7 +57,7 @@ describe('buildGenerateRequestBody', () => {
 	});
 
 	it('FIELDS mode: uses guided fields and sends null when none provided', () => {
-		const { ctx } = makeCtx({
+		const { ctx } = makeExecuteCtx({
 			templateId: 'tpl',
 			useTemplateVersion: false,
 			inputMode: 'fields',

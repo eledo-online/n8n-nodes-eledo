@@ -1,32 +1,15 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { NodeApiError } from 'n8n-workflow';
 import { executeDocumentGenerate } from '../../../../../../nodes/Eledo/resources/document/generate-execute';
+import { makeExecuteCtx } from '../../../../../utils/n8n'
 
 function abFromString(s: string): ArrayBuffer {
 	return new TextEncoder().encode(s).buffer;
 }
 
-function makeCtx(params: Record<string, any>) {
-	const httpCall = vi.fn();
-	const binaryToString = vi.fn();
-	const prepareBinaryData = vi.fn();
-
-	const ctx: any = {
-		getNode: vi.fn(() => ({ name: 'Eledo' })),
-		getNodeParameter: vi.fn((key: string) => params[key]),
-		helpers: {
-			httpRequestWithAuthentication: { call: httpCall },
-			binaryToString,
-			prepareBinaryData,
-		},
-	};
-
-	return { ctx, httpCall, binaryToString, prepareBinaryData };
-}
-
 describe('executeDocumentGenerate', () => {
 	it('returns binary.document for file output', async () => {
-		const { ctx, httpCall, prepareBinaryData } = makeCtx({
+		const { ctx, httpCall } = makeExecuteCtx({
 			outputType: 'file',
 			templateId: 'tpl',
 			useTemplateVersion: false,
@@ -47,7 +30,7 @@ describe('executeDocumentGenerate', () => {
 			statusCode: 200,
 		});
 
-		prepareBinaryData.mockResolvedValueOnce({ data: 'bin', fileName: '0_0.pdf', mimeType: 'application/pdf' });
+		ctx.helpers.prepareBinaryData.mockResolvedValueOnce({ data: 'bin', fileName: '0_0.pdf', mimeType: 'application/pdf' });
 
 		const item: any = { json: { keep: 1 }, binary: { keepBin: { data: 'x' } } };
 
@@ -56,11 +39,11 @@ describe('executeDocumentGenerate', () => {
 		expect(out.json).toEqual({ keep: 1 });
 		expect(out.binary.keepBin).toBeDefined();
 		expect(out.binary.document).toBeDefined();
-		expect(prepareBinaryData).toHaveBeenCalledWith(pdfBody, '0_0.pdf', 'application/pdf');
+		expect(ctx.helpers.prepareBinaryData).toHaveBeenCalledWith(pdfBody, '0_0.pdf', 'application/pdf');
 	});
 
 	it('returns pdfBase64 + metadata for base64 output', async () => {
-		const { ctx, httpCall, binaryToString } = makeCtx({
+		const { ctx, httpCall } = makeExecuteCtx({
 			outputType: 'base64',
 			templateId: 'tpl',
 			useTemplateVersion: false,
@@ -79,7 +62,7 @@ describe('executeDocumentGenerate', () => {
 			statusCode: 200,
 		});
 
-		binaryToString.mockResolvedValueOnce('BASE64PDF');
+		ctx.helpers.binaryToString.mockResolvedValueOnce('BASE64PDF');
 
 		const item: any = { json: { keep: 1 } };
 
@@ -92,7 +75,7 @@ describe('executeDocumentGenerate', () => {
 	});
 
 	it('throws NodeApiError for application/json error payload', async () => {
-		const { ctx, httpCall, binaryToString } = makeCtx({
+		const { ctx, httpCall } = makeExecuteCtx({
 			outputType: 'file',
 			templateId: 'tpl',
 			useTemplateVersion: false,
@@ -107,14 +90,14 @@ describe('executeDocumentGenerate', () => {
 			statusCode: 400,
 		});
 
-		binaryToString.mockResolvedValueOnce(JSON.stringify(errObj));
+		ctx.helpers.binaryToString.mockResolvedValueOnce(JSON.stringify(errObj));
 
 		await expect(executeDocumentGenerate.call(ctx, 0, { json: {} } as any))
 			.rejects.toBeInstanceOf(NodeApiError);
 	});
 
 	it('JSON error payload with invalid JSON falls back to text message', async () => {
-		const { ctx, httpCall, binaryToString } = makeCtx({
+		const { ctx, httpCall } = makeExecuteCtx({
 			outputType: 'file',
 			templateId: 'tpl',
 			useTemplateVersion: false,
@@ -128,14 +111,14 @@ describe('executeDocumentGenerate', () => {
 			statusCode: 400,
 		});
 
-		binaryToString.mockResolvedValueOnce('NOT JSON');
+		ctx.helpers.binaryToString.mockResolvedValueOnce('NOT JSON');
 
 		await expect(executeDocumentGenerate.call(ctx, 0, { json: {} } as any))
 			.rejects.toBeInstanceOf(NodeApiError);
 	});
 
 	it('defaults filename to document.pdf when header missing', async () => {
-		const { ctx, httpCall, prepareBinaryData } = makeCtx({
+		const { ctx, httpCall } = makeExecuteCtx({
 			outputType: 'file',
 			templateId: 'tpl',
 			useTemplateVersion: false,
@@ -151,10 +134,10 @@ describe('executeDocumentGenerate', () => {
 			statusCode: 200,
 		});
 
-		prepareBinaryData.mockResolvedValueOnce({ data: 'bin' });
+		ctx.helpers.prepareBinaryData.mockResolvedValueOnce({ data: 'bin' });
 
 		const out = await executeDocumentGenerate.call(ctx, 0, { json: {} } as any);
-		expect(prepareBinaryData).toHaveBeenCalledWith(pdfBody, 'document.pdf', 'application/pdf');
+		expect(ctx.helpers.prepareBinaryData).toHaveBeenCalledWith(pdfBody, 'document.pdf', 'application/pdf');
 		expect(out.binary.document).toBeDefined();
 	});
 });

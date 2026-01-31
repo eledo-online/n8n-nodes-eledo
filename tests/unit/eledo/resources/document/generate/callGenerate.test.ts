@@ -1,20 +1,11 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { callGenerate } from '../../../../../../nodes/Eledo/resources/document/generate-execute';
 import { ELEDO_CREDENTIALS } from '../../../../../../shared/eledo/constants/credentials';
-
-function makeCtx() {
-	const httpCall = vi.fn();
-	const ctx: any = {
-		helpers: {
-			httpRequestWithAuthentication: { call: httpCall },
-		},
-	};
-	return { ctx, httpCall };
-}
+import { makeExecuteCtx } from '../../../../../utils/n8n'
 
 describe('callGenerate', () => {
 	it('POSTs to /Generate with arraybuffer response', async () => {
-		const { ctx, httpCall } = makeCtx();
+		const { ctx, httpCall } = makeExecuteCtx();
 		httpCall.mockResolvedValueOnce({ body: new ArrayBuffer(1), headers: {}, statusCode: 200 });
 
 		const body = { templateId: 'tpl', file: null };
