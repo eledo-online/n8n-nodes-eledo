@@ -325,6 +325,7 @@ export async function executeDocumentGenerate(this: IExecuteFunctions, itemIndex
 	const out: INodeExecutionData = {
 		json: { ...(item.json ?? {}) },
 		binary: item.binary ? { ...item.binary } : {},
+		pairedItem: { item: itemIndex },
 	};
 
 	if (outputType === OUTPUT_TYPE.BASE64) {

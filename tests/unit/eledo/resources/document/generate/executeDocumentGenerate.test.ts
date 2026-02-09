@@ -41,6 +41,7 @@ describe('executeDocumentGenerate', () => {
 		expect(out.json).toEqual({ keep: 1 });
 		expect(out.binary.keepBin).toBeDefined();
 		expect(out.binary.document).toBeDefined();
+		expect(out.pairedItem).toEqual({ item: 0 });
 		expect(ctx.helpers.prepareBinaryData).toHaveBeenCalledWith(pdfBody, '0_0.pdf', 'application/pdf');
 	});
 
@@ -74,6 +75,7 @@ describe('executeDocumentGenerate', () => {
 		expect(out.json.pdfBase64).toBe('BASE64PDF');
 		expect(out.json.filename).toBe('0_0.pdf');
 		expect(out.json.mimeType).toBe('application/pdf');
+		expect(out.pairedItem).toEqual({ item: 0 });
 	});
 
 	it('throws NodeApiError for application/json error payload', async () => {
@@ -141,5 +143,6 @@ describe('executeDocumentGenerate', () => {
 		const out = await executeDocumentGenerate.call(ctx, 0, { json: {} } as any);
 		expect(ctx.helpers.prepareBinaryData).toHaveBeenCalledWith(pdfBody, 'document.pdf', 'application/pdf');
 		expect(out.binary.document).toBeDefined();
+		expect(out.pairedItem).toEqual({ item: 0 });
 	});
 });
