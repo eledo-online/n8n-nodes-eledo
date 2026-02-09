@@ -1,6 +1,6 @@
 {
   "name": "@eledo/n8n-nodes-eledo",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Generate PDFs with Eledo directly in n8n workflows.",
   "license": "MIT",
   "homepage": "https://github.com/eledo-online/n8n-nodes-eledo#readme",
