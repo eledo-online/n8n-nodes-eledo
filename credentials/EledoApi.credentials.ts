@@ -7,7 +7,7 @@ import type {
 } from 'n8n-workflow';
 
 import { eledoUrl } from '../shared/eledo/constants/url';
-import { ELEDO_CREDENTIALS } from '../shared/eledo/constants/credentials';
+import { ELEDO_CREDENTIALS, ELEDO_SOURCE_HEADER } from '../shared/eledo/constants/credentials';
 
 export class EledoApi implements ICredentialType {
 	name = ELEDO_CREDENTIALS.API;
@@ -42,6 +42,7 @@ export class EledoApi implements ICredentialType {
 	test: ICredentialTestRequest = {
 		request: {
 			url: eledoUrl('/Profile'),
+			headers: ELEDO_SOURCE_HEADER,
 		},
 	};
 }
