@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2026-02-09
+
+### Added
+
+* Explicit request identification via a custom `X-ELEDO-SOURCE` HTTP header (`n8n-community-node`) on authenticated API calls.
+* Centralized constant for the Eledo source header to ensure consistent identification across all relevant requests.
+
+### Changed
+
+* Refactored request header handling to avoid duplication and ensure predictable behavior across n8n runtime and credential test requests.
+* Minor internal cleanup related to request construction following backend coordination discussions.
+
+### Notes
+
+* This is a **non-breaking** release.
+* The added header is intended for backend routing, monitoring, and statistical purposes only.
+* If future backend changes require adjustments, the implementation can be updated without affecting node users.
+* This release introduces no functional changes to node behavior or API payloads.
+
 ## [1.0.1] - 2026-01-31
 
 ### Added
@@ -73,6 +92,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * This release is a baseline scaffold and has not yet been validated in a live n8n instance.
 
+[1.0.2]: https://github.com/eledo-online/n8n-nodes-eledo/releases/tag/v1.0.2
 [1.0.1]: https://github.com/eledo-online/n8n-nodes-eledo/releases/tag/v1.0.1
 [1.0.0]: https://github.com/eledo-online/n8n-nodes-eledo/releases/tag/v1.0.0
 [0.1.0]: https://github.com/eledo-online/n8n-nodes-eledo/releases/tag/v0.1.0
