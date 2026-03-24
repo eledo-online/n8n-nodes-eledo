@@ -42,7 +42,13 @@ describe('executeDocumentGenerate', () => {
 		expect(out.binary.keepBin).toBeDefined();
 		expect(out.binary.document).toBeDefined();
 		expect(out.pairedItem).toEqual({ item: 0 });
-		expect(ctx.helpers.prepareBinaryData).toHaveBeenCalledWith(pdfBody, '0_0.pdf', 'application/pdf');
+
+		const [binaryArg, filenameArg, mimeArg] = ctx.helpers.prepareBinaryData.mock.calls[0];
+
+		expect(Buffer.isBuffer(binaryArg)).toBe(true);
+		expect(binaryArg.equals(Buffer.from(pdfBody))).toBe(true);
+		expect(filenameArg).toBe('0_0.pdf');
+		expect(mimeArg).toBe('application/pdf');
 	});
 
 	it('returns pdfBase64 + metadata for base64 output', async () => {
@@ -141,7 +147,13 @@ describe('executeDocumentGenerate', () => {
 		ctx.helpers.prepareBinaryData.mockResolvedValueOnce({ data: 'bin' });
 
 		const out = await executeDocumentGenerate.call(ctx, 0, { json: {} } as any);
-		expect(ctx.helpers.prepareBinaryData).toHaveBeenCalledWith(pdfBody, 'document.pdf', 'application/pdf');
+
+		const [binaryArg, filenameArg, mimeArg] = ctx.helpers.prepareBinaryData.mock.calls[0];
+
+		expect(Buffer.isBuffer(binaryArg)).toBe(true);
+		expect(binaryArg.equals(Buffer.from(pdfBody))).toBe(true);
+		expect(filenameArg).toBe('document.pdf');
+		expect(mimeArg).toBe('application/pdf');
 		expect(out.binary.document).toBeDefined();
 		expect(out.pairedItem).toEqual({ item: 0 });
 	});
