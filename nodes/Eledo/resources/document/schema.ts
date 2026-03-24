@@ -1,7 +1,7 @@
 import { NodeOperationError } from 'n8n-workflow';
 import type { ILoadOptionsFunctions, INodePropertyOptions, JsonObject } from 'n8n-workflow';
 import { eledoUrl } from '../../../../shared/eledo/constants/url';
-import { ELEDO_CREDENTIALS } from '../../../../shared/eledo/constants/credentials';
+import { eledoRequest } from '../../../../shared/eledo/constants/credentials';
 import { isJsonObject } from '../../../../shared/eledo/helpers';
 
 /**
@@ -113,7 +113,7 @@ export async function fetchTemplateSchema(
 	let response: unknown;
 
 	try {
-		response = await this.helpers.httpRequestWithAuthentication.call(this, ELEDO_CREDENTIALS.API, {
+		response = await eledoRequest.call(this, {
 			method: 'GET',
 			url: eledoSchemaUrl(templateId, templateVersion),
 			json: true,

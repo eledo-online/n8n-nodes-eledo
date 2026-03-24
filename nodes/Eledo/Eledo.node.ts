@@ -1,10 +1,10 @@
-import { NodeConnectionTypes, IExecuteFunctions, INodeExecutionData } from 'n8n-workflow';
+import { NodeConnectionTypes, IExecuteFunctions, INodeExecutionData, NodeOperationError } from 'n8n-workflow';
 import type { INodeType, INodeTypeDescription } from 'n8n-workflow';
 import { documentDescription } from './resources/document';
 import { getTemplates } from './resources/document/list';
 import { getTemplateTextAndNumberFields, getTemplateBooleanFields, getTemplateDateFields } from './resources/document/schema';
 import { executeDocumentGenerate } from './resources/document/generate-execute';
-import { ELEDO_CREDENTIALS, ELEDO_SOURCE_HEADER } from '../../shared/eledo/constants/credentials';
+import { ELEDO_CREDENTIALS } from '../../shared/eledo/constants/credentials';
 
 export class Eledo implements INodeType {
 	description: INodeTypeDescription = {
@@ -22,13 +22,6 @@ export class Eledo implements INodeType {
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],
 		credentials: [{ name: ELEDO_CREDENTIALS.API, required: true }],
-		requestDefaults: {
-			headers: {
-				...ELEDO_SOURCE_HEADER,
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-		},
 		properties: [
 			{
 				displayName: 'Resource',
@@ -77,20 +70,42 @@ export class Eledo implements INodeType {
 	 */
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
-		const returnItems = [];
+		const returnItems: INodeExecutionData[] = [];
 
 		for (let i = 0; i < items.length; i++) {
-			const resource = this.getNodeParameter('resource', i) as string;
-			const operation = this.getNodeParameter('operation', i) as string;
+			try {
+				const resource = this.getNodeParameter('resource', i) as string;
+				const operation = this.getNodeParameter('operation', i) as string;
 
-			if (resource === 'document' && operation === 'generate') {
-				const out = await executeDocumentGenerate.call(this, i, items[i]);
-				returnItems.push(out);
-				continue;
+				if (resource === 'document' && operation === 'generate') {
+					const out = await executeDocumentGenerate.call(this, i, items[i]);
+					returnItems.push(out);
+					continue;
+				}
+
+				// fallback passthrough
+				returnItems.push(items[i]);
+			} catch (error) {
+				if (this.continueOnFail()) {
+					returnItems.push({
+						json: {
+							error: error instanceof Error ? error.message : 'Unknown error',
+						},
+						pairedItem: { item: i },
+					});
+					continue;
+				}
+
+				if (error instanceof NodeOperationError) {
+					throw error;
+				}
+
+				throw new NodeOperationError(
+					this.getNode(),
+					error instanceof Error ? error.message : 'Unknown error',
+					{ itemIndex: i },
+				);
 			}
-
-			// fallback passthrough
-			returnItems.push(items[i]);
 		}
 
 		return [returnItems];
