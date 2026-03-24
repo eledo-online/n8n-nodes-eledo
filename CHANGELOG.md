@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2026-03-24
+
+### Changed
+
+* Upgraded project dependencies and refreshed the lockfile
+* Updated binary response handling to convert HTTP `ArrayBuffer` payloads to Node `Buffer` before passing data to n8n helpers
+* Updated tests to reflect the stricter binary handling introduced by the dependency upgrade
+
+### Fixed
+
+* Removed unused `requestDefaults` from the node definition, since the node uses the programmatic API
+* Applied the Eledo source header in the actual authenticated HTTP request path used by the node
+* Added `continueOnFail` support in the main execution loop for better n8n compliance
+* Normalized unexpected execution errors to `NodeOperationError` with item context when `continueOnFail` is disabled
+
 ## [1.0.3] - 2026-02-09
 
 ### Added
@@ -103,6 +118,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * This release is a baseline scaffold and has not yet been validated in a live n8n instance.
 
+[1.0.4]: https://github.com/eledo-online/n8n-nodes-eledo/releases/tag/v1.0.4
 [1.0.3]: https://github.com/eledo-online/n8n-nodes-eledo/releases/tag/v1.0.3
 [1.0.2]: https://github.com/eledo-online/n8n-nodes-eledo/releases/tag/v1.0.2
 [1.0.1]: https://github.com/eledo-online/n8n-nodes-eledo/releases/tag/v1.0.1
