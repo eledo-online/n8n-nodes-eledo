@@ -304,12 +304,13 @@ export async function executeDocumentGenerate(this: IExecuteFunctions, itemIndex
 
 	const body: JsonObject = buildGenerateRequestBody.call(this, itemIndex);
 	const resp = await callGenerate.call(this, body);
+	const responseBuffer = Buffer.from(resp.body);
 
 	const contentType = String(resp.headers?.['content-type'] ?? '').toLowerCase();
 
 	// Eledo: error is JSON
 	if (contentType.includes('application/json')) {
-		const text = resp.body ? await this.helpers.binaryToString(resp.body, 'utf8') : '';
+		const text = resp.body ? await this.helpers.binaryToString(responseBuffer, 'utf8') : '';
 		let errJson: JsonObject | undefined;
 		try {
 			errJson = text ? (JSON.parse(text) as JsonObject) : undefined;
@@ -329,13 +330,13 @@ export async function executeDocumentGenerate(this: IExecuteFunctions, itemIndex
 	};
 
 	if (outputType === OUTPUT_TYPE.BASE64) {
-		out.json.pdfBase64 = await this.helpers.binaryToString(resp.body, OUTPUT_TYPE.BASE64);
+		out.json.pdfBase64 = await this.helpers.binaryToString(responseBuffer, OUTPUT_TYPE.BASE64);
 		out.json.filename = filename;
 		out.json.mimeType = 'application/pdf';
 		return out;
 	}
 
 	// outputType === OUTPUT_TYPE.FILE
-	out.binary!.document = await this.helpers.prepareBinaryData(resp.body, filename, 'application/pdf');
+	out.binary!.document = await this.helpers.prepareBinaryData(responseBuffer, filename, 'application/pdf');
 	return out;
 }

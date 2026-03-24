@@ -9,8 +9,15 @@ describe('executeDocumentGenerate (errors)', () => {
 	it('throws NodeApiError when Eledo returns application/json error payload (fixture)', async () => {
 		const fixture = { error: 'Request Body is empty, or not a valid JSON' };
 
+		const payload = readFixtureJson('eledo', 'generate', 'generate.http.no.body.payload.error.json');
+		const bodyBuffer = Buffer.from(JSON.stringify(payload), 'utf8');
+		const bodyArrayBuffer = bodyBuffer.buffer.slice(
+			bodyBuffer.byteOffset,
+			bodyBuffer.byteOffset + bodyBuffer.byteLength,
+		);
+
 		const httpCall = vi.fn().mockResolvedValueOnce({
-			body: readFixtureJson('eledo', 'generate', 'generate.http.no.body.payload.error.json'),
+			body: bodyArrayBuffer,
 			headers: { 'content-type': 'application/json' },
 			statusCode: 400,
 		});
