@@ -1,7 +1,7 @@
 import { NodeOperationError } from 'n8n-workflow';
 import type { ILoadOptionsFunctions, INodePropertyOptions } from 'n8n-workflow';
 import { eledoUrl } from '../../../../shared/eledo/constants/url';
-import { ELEDO_CREDENTIALS } from '../../../../shared/eledo/constants/credentials';
+import { eledoRequest } from '../../../../shared/eledo/constants/credentials';
 import { isJsonObject } from '../../../../shared/eledo/helpers';
 
 interface EledoTemplate {
@@ -60,7 +60,7 @@ export async function getTemplates(this: ILoadOptionsFunctions): Promise<INodePr
 	let response: unknown;
 
 	try {
-		response = await this.helpers.httpRequestWithAuthentication.call(this, ELEDO_CREDENTIALS.API, {
+		response = await eledoRequest.call(this, {
 			method: 'GET',
 			url: eledoUrl('/List'),
 			qs: {

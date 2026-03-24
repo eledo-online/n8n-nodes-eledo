@@ -4,7 +4,7 @@ import { documentDescription } from './resources/document';
 import { getTemplates } from './resources/document/list';
 import { getTemplateTextAndNumberFields, getTemplateBooleanFields, getTemplateDateFields } from './resources/document/schema';
 import { executeDocumentGenerate } from './resources/document/generate-execute';
-import { ELEDO_CREDENTIALS, ELEDO_SOURCE_HEADER } from '../../shared/eledo/constants/credentials';
+import { ELEDO_CREDENTIALS } from '../../shared/eledo/constants/credentials';
 
 export class Eledo implements INodeType {
 	description: INodeTypeDescription = {
@@ -22,13 +22,6 @@ export class Eledo implements INodeType {
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],
 		credentials: [{ name: ELEDO_CREDENTIALS.API, required: true }],
-		requestDefaults: {
-			headers: {
-				...ELEDO_SOURCE_HEADER,
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-		},
 		properties: [
 			{
 				displayName: 'Resource',

@@ -1,7 +1,7 @@
 import { IHttpRequestOptions, INodeExecutionData, JsonObject, NodeApiError } from 'n8n-workflow';
 import type { IExecuteFunctions } from 'n8n-workflow';
 import { eledoUrl } from '../../../../shared/eledo/constants/url';
-import { ELEDO_CREDENTIALS } from '../../../../shared/eledo/constants/credentials';
+import { eledoRequest } from '../../../../shared/eledo/constants/credentials';
 import { extractFilename, toIsoDateTimeStringMaybe, coerceNumberMaybe, safeJsonParseObject } from '../../../../shared/eledo/helpers';
 
 /**
@@ -270,7 +270,7 @@ export async function callGenerate(this: IExecuteFunctions, body: JsonObject): P
 		encoding: 'arraybuffer'
 	};
 
-	return (await this.helpers.httpRequestWithAuthentication.call(this, ELEDO_CREDENTIALS.API, options));
+	return (await eledoRequest.call(this, options));
 }
 
 /**
