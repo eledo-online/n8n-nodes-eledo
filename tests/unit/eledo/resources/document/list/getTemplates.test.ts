@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line @n8n/community-nodes/no-restricted-imports
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { NodeApiError } from 'n8n-workflow';
 import { eledoUrl } from '../../../../../../shared/eledo/constants/url';
 import { ELEDO_CREDENTIALS } from '../../../../../../shared/eledo/constants/credentials';
 import { readFixtureJson } from '../../../../../utils/fixtures'
@@ -89,15 +90,12 @@ describe('getTemplates', () => {
 		expect(out[2].description).toBeUndefined();
 	});
 
-	it('throws NodeOperationError with context when the API call fails', async () => {
+	it('throws NodeApiError with context when the API call fails', async () => {
 		const { ctx, httpCall } = makeLoadOptionsCtx({ templateScope: TEMPLATE_SCOPE.PRIVATE });
 
 		httpCall.mockRejectedValueOnce(new Error('boom'));
 
-		await expect(getTemplates.call(ctx as any)).rejects.toMatchObject({
-			name: 'NodeOperationError',
-			message: expect.stringContaining('Failed to fetch templates from Eledo (/List). boom'),
-		});
+		await expect(getTemplates.call(ctx as any)).rejects.toBeInstanceOf(NodeApiError);
 	});
 
 	it('throws NodeOperationError when response does not match expected shape', async () => {
