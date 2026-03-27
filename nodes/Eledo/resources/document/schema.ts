@@ -1,4 +1,4 @@
-import { NodeOperationError } from 'n8n-workflow';
+import { NodeApiError, NodeOperationError } from 'n8n-workflow';
 import type { ILoadOptionsFunctions, INodePropertyOptions, JsonObject } from 'n8n-workflow';
 import { eledoUrl } from '../../../../shared/eledo/constants/url';
 import { eledoRequest } from '../../../../shared/eledo/constants/credentials';
@@ -118,12 +118,8 @@ export async function fetchTemplateSchema(
 			url: eledoSchemaUrl(templateId, templateVersion),
 			json: true,
 		});
-	} catch (err: unknown) {
-		const message = err instanceof Error ? err.message : String(err);
-		throw new NodeOperationError(
-			this.getNode(),
-			`Failed to fetch template schema from Eledo (/Schema). ${message}`,
-		);
+	} catch (error: unknown) {
+		throw new NodeApiError(this.getNode(), error as JsonObject);
 	}
 
 	if (!isEledoSchemaResponse(response)) {

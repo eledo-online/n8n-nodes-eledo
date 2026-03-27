@@ -1,6 +1,6 @@
 // eslint-disable-next-line @n8n/community-nodes/no-restricted-imports
 import { describe, it, expect } from 'vitest';
-import { NodeOperationError } from 'n8n-workflow';
+import { NodeApiError, NodeOperationError } from 'n8n-workflow';
 import { fetchTemplateSchema } from '../../../../../../nodes/Eledo/resources/document/schema';
 import { ELEDO_CREDENTIALS } from '../../../../../../shared/eledo/constants/credentials';
 import { makeLoadOptionsCtx } from '../../../../../utils/n8n'
@@ -30,11 +30,11 @@ describe('fetchTemplateSchema', () => {
 		expect(String(req.url)).toContain('/2');
 	});
 
-	it('throws NodeOperationError on request failure', async () => {
+	it('throws NodeApiError on request failure', async () => {
 		const { ctx, httpCall } = makeLoadOptionsCtx();
 		httpCall.mockRejectedValueOnce(new Error('boom'));
 
-		await expect(fetchTemplateSchema.call(ctx, 'tpl1')).rejects.toBeInstanceOf(NodeOperationError);
+		await expect(fetchTemplateSchema.call(ctx, 'tpl1')).rejects.toBeInstanceOf(NodeApiError);
 	});
 
 	it('throws NodeOperationError on invalid response', async () => {
