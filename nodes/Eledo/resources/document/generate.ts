@@ -36,12 +36,6 @@ export const documentGenerateDescription: INodeProperties[] = [
 		displayOptions: {
 			show: showOnlyForDocumentGenerate,
 		},
-		routing: {
-			send: {
-				type: 'body',
-				property: 'templateId',
-			},
-		},
 	},
 	{
 		displayName: 'Use Specific Template Version',
@@ -66,12 +60,6 @@ export const documentGenerateDescription: INodeProperties[] = [
 			},
 		},
 		description: 'Specific version of the template',
-		routing: {
-			send: {
-				type: 'body',
-				property: 'templateVersion',
-			},
-		},
 	},
 	{
 		displayName: 'Input',
